@@ -138,7 +138,6 @@ d3.json(
       .attr("y", 0)
       .attr("width", 3000)
       .attr("height", 1500);
-
     // draw a path for each feature/country
     countries = countriesGroup
       .selectAll("path")
@@ -147,10 +146,45 @@ d3.json(
       .append("path")
       .attr("d", path)
       .attr("id", function(d, i) {
-        return "country" + d.properties.iso_a3;
+        return "country" + d.properties.id;
       })
       .attr("class", "country")
-      .on("click", function(d, i) {console.log(d)});
+      .on("click", function(d, i) {
+        var country = document.getElementById("prompt-country").innerHTML;
+        checkAnswer(d.id, country);
+      });
     initiateZoom();
   }
 );
+
+function drawCountry(i) {
+  var url = "https://geoquiz.eanderson.me/getCountry?i=" + i;
+  d3.json(
+    url, function(json) {
+      json = JSON.parse(json);
+      countriesGroup = svg.append("g").attr("id", "map");
+      // add a background rectangle
+      countriesGroup
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 3000)
+        .attr("height", 1500);
+      // draw a path for each feature/country
+      countries = countriesGroup
+        .selectAll("path")
+        .data(json.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("id", function(d, i) {
+          return "country" + d.properties.id;
+        })
+        .attr("class", "country")
+        .on("click", function(d, i) {console.log(d)});
+      initiateZoom();
+    }
+  );
+
+  initiateZoom();
+}
