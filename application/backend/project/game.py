@@ -1,10 +1,10 @@
 from flask import Blueprint, jsonify, request
-import geodata as gd
+import project.geodata as gd
 import random
 
-gamer = Blueprint('game', __name__)
+game_blueprint = Blueprint('game', __name__)
 
-@gamer.route("/getQuestion")
+@game_blueprint.route("/getQuestion")
 def getQuestion():
     cdf = gd.openGeoData()
     count = cdf.shape[0] # Number of rows in the dataframe
@@ -13,7 +13,7 @@ def getQuestion():
     response = {'Country': country['name']}
     return jsonify(response)
 
-@gamer.route("/checkAnswer")
+@game_blueprint.route("/checkAnswer")
 def checkAnswer():
     country = request.args.get('country', default='NONE', type = str)
     guess = request.args.get('guess', default = 0, type = int)
