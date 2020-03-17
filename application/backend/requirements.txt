@@ -1,0 +1,9 @@
+ 
+Flask==1.1.1
+Flask-Cors==3.0.8
+flask-migrate==2.5.2
+Flask-SQLAlchemy==2.4.1
+gunicorn==20.0.4
+pandas==0.24.2
+geopandas==0.6.3
+shapely==1.7.0

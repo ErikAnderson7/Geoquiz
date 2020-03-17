@@ -91,3 +91,8 @@ svg rect {
     border-radius: 1px;
     border-color: #919191;
 }
+#coming-soon h1 {
+    font-size: xx-large;
+    color: white;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+}

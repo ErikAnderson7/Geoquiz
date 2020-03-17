@@ -127,7 +127,7 @@ var svg = d3
 
 // get map data
 d3.json(
-  "https://geoquiz.eanderson.me/getWorld.json", function(json) {
+  location.href + "/maps/getWorld.json", function(json) {
   //"https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json", function(json) {
     json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
     countriesGroup = svg.append("g").attr("id", "map");
@@ -158,7 +158,7 @@ d3.json(
 );
 
 function drawCountry(i) {
-  var url = "https://geoquiz.eanderson.me/getCountry?i=" + i;
+  var url = location.href + "/maps/getCountry?i=" + i;
   d3.json(
     url, function(json) {
       json = JSON.parse(json);
