@@ -68,8 +68,8 @@ function checkAnswer(cid, country) {
                 document.getElementById(incorrect_country).style['fill'] = "red";
                 document.getElementById(correct_country).style['fill'] = "green";
             }
-            document.getElementById("prompt-correct-count").innerHTML = GS.correctGuesses;
-            document.getElementById("prompt-total-count").innerHTML = GS.totalGuesses;
+            document.getElementById("guess-correct-count").innerHTML = GS.correctGuesses;
+            document.getElementById("guess-total-count").innerHTML = GS.totalGuesses;
         }
     }
     var url = "/game/checkAnswer?guess=" + cid + "&country=" + country;
@@ -81,7 +81,7 @@ function checkAnswer(cid, country) {
 function resetAndGetNextQuestion() {
     var countries = document.getElementsByClassName("country");
     for(var i = 0; i < countries.length; i++) {
-        countries[i].style['fill'] = "#1b262c";
+        countries[i].style['fill'] = null;
     }
 
     getQuestion();
