@@ -32,6 +32,9 @@ class GameScore {
 const GS = new GameScore(0, 0);
 
 function getQuestion() {
+    var questionButton = document.getElementById("reset-button");
+    questionButton.disabled = true;
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if(this.readyState == 4 && this.status == 200){
@@ -47,13 +50,15 @@ function getQuestion() {
 
 function checkAnswer(cid, country) {
     var xhttp = new XMLHttpRequest();
+    console.log("Guessing Country: " + String(cid))
     xhttp.onreadystatechange = function(i) {
         if(this.readyState == 4 && this.status == 200){
             console.log(this.response);
             var answer = JSON.parse(this.response);
             var correct = answer.Correct;
             if(correct == "True"){
-                console.log("Correct");
+                console.log("Correct!");
+                showPopup("Correct!")
                 GS.incCorrect();
                 GS.incTotal();
                 var country = "country" + String(cid);
@@ -61,7 +66,7 @@ function checkAnswer(cid, country) {
                 document.getElementById(country).style['fill'] = "green";
             }
             else {
-                console.log("Incorrect");
+                showPopup("Incorrect\nYour Guess: " + answer.Guess + "\nDistance: " + String(answer.Distance) + " Km")
                 GS.incTotal();
                 var incorrect_country = "country" + String(cid);
                 var correct_country = "country" + String(answer.CorrectID);
@@ -71,6 +76,9 @@ function checkAnswer(cid, country) {
             document.getElementById("guess-correct-count").innerHTML = GS.correctGuesses;
             document.getElementById("guess-total-count").innerHTML = GS.totalGuesses;
         }
+
+        var questionButton = document.getElementById("reset-button");
+        questionButton.disabled = false;
     }
     var url = "/game/checkAnswer?guess=" + cid + "&country=" + country;
     console.log(url);
@@ -84,7 +92,21 @@ function resetAndGetNextQuestion() {
         countries[i].style['fill'] = null;
     }
 
+    hidePopup();
+
     getQuestion();
+}
+
+function showPopup(text) {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+    popup.innerText = text;
+}  
+
+function hidePopup() {
+    var popup = document.getElementById("myPopup");
+    popup.classList.toggle("show");
+    popup.innerText = "";
 }
 
 getQuestion();

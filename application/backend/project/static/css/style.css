@@ -95,6 +95,7 @@ svg rect {
     align-self: center;
 }
 #reset-button {
+    visibility: visible;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: medium;
     color: white;
@@ -102,8 +103,59 @@ svg rect {
     border-radius: 1px;
     border-color: #919191;
 }
+#reset-button:disabled {
+    visibility: hidden;
+}
 #coming-soon h1 {
     font-size: xx-large;
     color: white;
     font-family: 'Yanone Kaffeesatz', sans-serif;
+}
+
+
+/* Popup container */
+.popup {
+    height: 0%;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+  
+/* The actual popup (appears on top) */
+.popup .popuptext {
+    visibility: hidden;
+    align-self: center;
+    width: 160px;
+    background-color: #384d58;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 25;
+    left: 50%;
+    margin-left: -80px;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
 }
