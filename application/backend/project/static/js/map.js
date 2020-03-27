@@ -128,7 +128,6 @@ var svg = d3
 // get map data
 d3.json(
   location.href + "/maps/getWorld.json", function(json) {
-  //"https://raw.githubusercontent.com/andybarefoot/andybarefoot-www/master/maps/mapdata/custom50.json", function(json) {
     json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
     countriesGroup = svg.append("g").attr("id", "map");
     // add a background rectangle
@@ -151,7 +150,7 @@ d3.json(
       .attr("class", "country")
       .on("click", function(d, i) {
         var country = document.getElementById("prompt-country").innerHTML;
-        checkAnswer(d.id, country);
+        checkAnswer(i, country);
       });
     initiateZoom();
   }

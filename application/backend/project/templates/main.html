@@ -12,11 +12,20 @@
             </div>
         </div>
         <div id="map-holder"></div>
+        <div class="popup">
+            <span class="popuptext" id="myPopup"></span>
+        </div>
         <div id="bottom-bar">
             <div id="bottom-bar-items">
                 <h1 class="prompt" id="prompt-prompt">Guess: </h1>
                 <h1 class="prompt" id="prompt-country"></h1>
-                <input id="reset-button" type="button" value="Get Next Question" onclick="resetAndGetNextQuestion()"/>
+                <input id="reset-button" type="button" value="Next Question" onclick="resetAndGetNextQuestion()"/> 
+            </div>
+            <div id ="bottom-bar-guesses">
+                <h1 class="guess" id="guess-correct">Correct:</h1>
+                <h1 class="guess" id="guess-correct-count">0</h1>
+                <h1 class="guess" id="guess-total">Total:</h1>
+                <h1 class="guess" id="guess-total-count">0</h1>
             </div>
         </div>
     </body>
