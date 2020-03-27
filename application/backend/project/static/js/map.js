@@ -138,10 +138,6 @@ d3.json(
       .attr("width", 3000)
       .attr("height", 1500);
     // draw a path for each feature/country
-    //countriesGroup
-      //.append("span")
-      //.attr("class", "popup")
-      //.attr("id")
     countries = countriesGroup
       .selectAll("path")
       .data(json.features)
