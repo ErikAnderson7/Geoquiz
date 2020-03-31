@@ -22,3 +22,7 @@ kubectl exec -it {postgres pod name} -- psql -U c2FtcGxl --password
 To Update the flask deployment on Kubernetes without killing everything:
 kubectl kill deployment flask
 kubectl create -f ./kubernetes/flask-deployment.yml
+
+
+CDN Socket.io
+https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js
