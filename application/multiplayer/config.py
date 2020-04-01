@@ -2,7 +2,7 @@ import os
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
-logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(filename)s) %(message)s")
+logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(filename)s | %(funcName)s) %(message)s")
 LOG = logging.getLogger()
 LOG.handlers.clear()
 
@@ -12,7 +12,7 @@ fileHandler.setLevel(logging.DEBUG)
 
 consoleHandler = logging.StreamHandler()
 consoleHandler.setFormatter(logFormatter)
-consoleHandler.setLevel(logging.INFO)
+consoleHandler.setLevel(logging.DEBUG)
 
 LOG.addHandler(fileHandler)
 LOG.addHandler(consoleHandler)
@@ -24,6 +24,8 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
+    DEBUG = True
+    TESTING = True
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
