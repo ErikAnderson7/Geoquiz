@@ -1,18 +1,16 @@
 from flask import Flask, Blueprint, jsonify, request, render_template
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from config import LOG
 import json
 import requests
-import socket
+from multiplayer_db import addUser, getGame
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
-socketio.logging = False
 
 @app.route("/")
 def test():
-    LOG.info("Hostname: " + str(socket.gethostname()))
     return render_template("main.html")
 
 @app.route("/maps/getWorld.json")
@@ -45,9 +43,11 @@ def get_question(message):
 
 @socketio.on('check-answer')
 def check_answer(message):
-    LOG.info(message)
+    LOG.info("Message: " + str(message) + " Type: " +str(type(message)))
     country = message['country']
     guess = message['guess']
+    username = message['username']
+    room = message['room']
     check_url = 'http://server:5000/game/checkAnswer?country={}&guess={}'.format(country, guess)
     response = requests.get(check_url).json()
     # Return back the answer information to the client. 
@@ -55,4 +55,17 @@ def check_answer(message):
     # Because of the way Websockets work they dont have this info, so give it back to them.
     response['GuessID'] = guess
     response['country'] = country
-    emit('answer-response', response)
+    response['username'] = username
+    emit('answer-response', response, broadcast=True, room=room)
+
+@socketio.on('join')
+def user_join_room(message):
+    LOG.info("Message: " + str(message) + " Type: " +str(type(message)))
+    username = message['username']
+    room = message['room']
+    addUser(room, username)
+    join_room(room)
+    LOG.info("User: " + str(username) + " has joined room: " + str(room))
+    game = getGame(room)
+    emit('user-joined', username + " has joined the room", broadcast=True, room=room)
+    emit('joined', game)

@@ -79,7 +79,7 @@ svg rect {
     align-items: center;
     justify-content: space-evenly;
 }
-#bottom-bar-items .prompt {
+.prompt {
     color: #FFFAFF;
     align-self: center;
 }
@@ -94,7 +94,7 @@ svg rect {
     color: #FFFAFF;
     align-self: center;
 }
-#reset-button {
+.input-button {
     visibility: visible;
     font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: medium;
@@ -112,8 +112,6 @@ svg rect {
     font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
-
-/* Popup container */
 .popup {
     height: 0%;
     width: 100%;
@@ -125,7 +123,6 @@ svg rect {
     justify-content: space-evenly;
 }
   
-/* The actual popup (appears on top) */
 .popup .popuptext {
     visibility: hidden;
     align-self: center;
@@ -142,7 +139,6 @@ svg rect {
     margin-left: -80px;
 }
 
-/* Toggle this class when clicking on the popup container (hide and show the popup) */
 .popup .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;
@@ -158,4 +154,31 @@ svg rect {
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity:1 ;}
+}
+
+#join-room {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0f4c75;
+    z-index: 1001;
+}
+
+#join-room-box{
+    width: 555px;
+    height: 375px;
+    background: #1b262c;
+    border: 1px solid #919191;
+    border-radius: 25px;
+    position: relative;
+    top: 150px; left: 375px;
+}
+
+#join-room-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
 }

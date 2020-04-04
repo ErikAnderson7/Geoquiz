@@ -4,6 +4,20 @@
         <title>Geography Quiz</title>
     </head>
     <body>
+        <div id="join-room">
+            <div id="join-room-box">
+            <div>
+              <h1 class="prompt">Join a Multiplayer Game</h2>
+              <div id="join-room-info">
+                <label class="prompt" for="username">Username</h2>
+                <input id="username" name="username" type="text">
+                <label class="prompt" for="room">Room</h2>
+                <input id="room" name="room" type="text">
+                <input class="input-button" id="join-room-button" type="button" value="Join Multiplayer Game" onclick="joinRoom()"/>
+              </div>     
+            </div>
+            </div>
+          </div>
         <div id="top-bar">
             <div id="top-bar-items">
                 <a class="link-button" href="/Singleplayer">Singleplayer</a>
@@ -19,7 +33,7 @@
             <div id="bottom-bar-items">
                 <h1 class="prompt" id="prompt-prompt">Guess: </h1>
                 <h1 class="prompt" id="prompt-country"></h1>
-                <input id="reset-button" type="button" value="Next Question" onclick="resetAndGetNextQuestion()"/> 
+                <input class="input-button" id="reset-button" type="button" value="Next Question" onclick="resetAndGetNextQuestion()"/> 
             </div>
             <div id ="bottom-bar-guesses">
                 <h1 class="guess" id="guess-correct">Correct:</h1>

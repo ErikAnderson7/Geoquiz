@@ -24,8 +24,8 @@ class BaseConfig:
 
 class DevelopmentConfig(BaseConfig):
     """Development configuration"""
-    DEBUG = True
-    TESTING = True
+    DEBUG = False
+    TESTING = False
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
