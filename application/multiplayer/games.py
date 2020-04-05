@@ -1,11 +1,6 @@
-from pymongo import MongoClient
-from config import LOG
+from config import LOG, db
 import json
 import requests
-
-mongoConnectionURL = 'mongodb://root:example@multiplayer-db:27017'
-mongo = MongoClient(mongoConnectionURL)
-db=mongo.multiplayergames
 
 def getGame(room):
     g = db.games.find({ 'room': room })

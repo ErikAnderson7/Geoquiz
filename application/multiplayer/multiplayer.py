@@ -3,7 +3,7 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from config import LOG
 import json
 import requests
-from multiplayer_db import addUser, getGame
+from games import addUser, getGame
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
