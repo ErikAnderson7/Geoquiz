@@ -37,9 +37,31 @@ def addUser(room, username):
     game['game']['users'][username] = {
         'totalGuesses': 0,
         'correctGuesses': 0,
-        'averageDistance': 0
+        'averageDistance': 0,
+        'totalDistance': 0
     }
     updateGame(room, game)
 
 def addGuess(room, username, guess):
-    LOG.info("ADDING A GUESS")
+    LOG.info("User: " + username + " Room: " + room + " Guess: " + str(guess))
+    game = getGame(room)
+    game['game']['question']['guesses'][username] = guess
+    prevScore = game['game']['users'][username]
+    if(guess['Correct'] == 'True'):
+        game['game']['users'][username]['totalGuesses'] = prevScore['totalGuesses'] + 1
+        game['game']['users'][username]['correctGuesses'] = prevScore['correctGuesses'] + 1
+        game['game']['users'][username]['averageDistance'] = prevScore['totalDistance'] / game['game']['users'][username]['totalGuesses']
+    else:
+        game['game']['users'][username]['totalGuesses'] = prevScore['totalGuesses'] + 1
+        game['game']['users'][username]['totalDistance'] = prevScore['totalDistance'] + guess['Distance'] 
+        game['game']['users'][username]['averageDistance'] = game['game']['users'][username]['totalDistance'] / game['game']['users'][username]['totalGuesses']
+
+    updateGame(room, game)
+
+def addNewQuestion(room):
+    game = getGame(room)
+    question = requests.get('http://server:5000/game/getQuestion').json()
+    game['game']['question']['guesses'] = {}
+    game['game']['question']['Country'] = question['Country']
+    updateGame(room, game)
+    return game

@@ -100,9 +100,6 @@ function boxZoom(box, centroid, paddingPerc) {
     );
 }
 
-
-
-
 // on window resize
 $(window).resize(function() {
   // Resize SVG

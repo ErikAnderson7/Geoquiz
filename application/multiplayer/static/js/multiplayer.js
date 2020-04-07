@@ -24,45 +24,20 @@ socket.on('message', function(message) {
     console.log(message)
 });
 
-socket.on('question', function(question) {
-    console.log(question.Country);
-    document.getElementById("prompt-country").innerHTML = question.Country; 
+socket.on('new-question', function(game) {
+    Game.hasGuessed = false;
+    resetMap();
+    document.getElementById("prompt-country").innerHTML = game.game.question.Country; 
 });
 
-socket.on('answer-response', function(answer) {
-    console.log(answer);
-    var correct = answer.Correct;
-    if(correct == "True"){
-        console.log("Correct!");
-        showPopup("Correct!")
-        Game.incCorrect();
-        Game.incTotal();
-        var country = "country" + String(answer.GuessID);
-        console.log(country);
-        document.getElementById(country).style['fill'] = "green";
-    }
-    else {
-        showPopup("Incorrect\nYour Guess: " + answer.Guess + "\nDistance: " + String(answer.Distance) + " Km")
-        Game.incTotal();
-        var incorrect_country = "country" + String(answer.GuessID);
-        var correct_country = "country" + String(answer.CorrectID);
-        document.getElementById(incorrect_country).style['fill'] = "red";
-        document.getElementById(correct_country).style['fill'] = "green";
-    }
-    document.getElementById("guess-correct-count").innerHTML = Game.correctGuesses;
-    document.getElementById("guess-total-count").innerHTML = Game.totalGuesses;
-
-    var questionButton = document.getElementById("reset-button");
-    questionButton.disabled = false;
+socket.on('answer-response', function(game) {
+    var guesses = game.game.question.guesses;
+    var users = game.game.users;
+    updateLeaderboard(users);
+    displayGuesses(guesses, users);
 });
 
-socket.on('user-joined', function(message) {
-    console.log(message);
-});
-
-/* when a user joins setup all the stuff that needs to be set up
-    currently just sets the question */
 socket.on('joined', function(message) {
-    console.log(message);
     document.getElementById("prompt-country").innerHTML = message.game.question.Country; 
+    updateLeaderboard(message.game.users);
 });

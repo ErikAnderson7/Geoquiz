@@ -26,20 +26,20 @@
             </div>
         </div>
         <div id="map-holder"></div>
-        <div class="popup">
-            <span class="popuptext" id="myPopup"></span>
-        </div>
         <div id="bottom-bar">
             <div id="bottom-bar-items">
                 <h1 class="prompt" id="prompt-prompt">Guess: </h1>
-                <h1 class="prompt" id="prompt-country"></h1>
-                <input class="input-button" id="reset-button" type="button" value="Next Question" onclick="resetAndGetNextQuestion()"/> 
+                <h1 class="prompt" id="prompt-country"></h1> 
             </div>
             <div id ="bottom-bar-guesses">
-                <h1 class="guess" id="guess-correct">Correct:</h1>
+                <h1 class="guess" id="guess-correct">Correct: </h1>
                 <h1 class="guess" id="guess-correct-count">0</h1>
-                <h1 class="guess" id="guess-total">Total:</h1>
+                <h1 class="guess" id="guess-total"> Total: </h1>
                 <h1 class="guess" id="guess-total-count">0</h1>
+                <div class="popup">
+                    <span class="popuptext" id="leaderboard-popup"></span>
+                </div>
+                <input class="input-button" id="leaderboard-button" type="button" value="Show Leaderboard" onclick="toggleLeaderboard()"/>
             </div>
         </div>
     </body>
