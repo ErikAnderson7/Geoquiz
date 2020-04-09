@@ -4,7 +4,7 @@ from config import LOG
 import json
 import requests
 from time import sleep
-from games import addUser, getGame, addGuess, addNewQuestion
+from games import addUser, getGame, addGuess, addNewQuestion, ColorTakenException, UsernameTakenException
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -70,8 +70,16 @@ def user_join_room(message):
     LOG.info("Message: " + str(message) + " Type: " +str(type(message)))
     username = message['username']
     room = message['room']
-    addUser(room, username)
-    join_room(room)
-    LOG.info("User: " + str(username) + " has joined room: " + str(room))
-    game = getGame(room)
-    emit('joined', game, broadcast=True, room=room)
+    color = message['color']
+    try:
+        addUser(room, username, color)
+        join_room(room)
+        LOG.info("User: " + str(username) + " has joined room: " + str(room))
+        game = getGame(room)
+        emit('joined', game, broadcast=True, room=room)
+    except ColorTakenException as e:
+        LOG.info("ColorTakeException: " + str(e))
+        emit('join-error', str(e))
+    except UsernameTakenException as e:
+        LOG.info("UsernameTakenException: " + str(e))
+        emit('join-error', str(e))

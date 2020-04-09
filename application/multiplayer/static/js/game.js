@@ -72,7 +72,7 @@ function displayGuesses(user_guesses, users) {
             else {
                 var incorrect_country = "country" + String(guess.GuessID);
                 var correct_country = "country" + String(guess.CorrectID);
-                document.getElementById(incorrect_country).style['fill'] = "red";              
+                document.getElementById(incorrect_country).style['fill'] = users[user]['color'];              
                 document.getElementById(correct_country).style['fill'] = "green";
             }
         }
@@ -85,10 +85,31 @@ function usersGuess(user) {
 }
 
 function updateLeaderboard(users) {
+    var sorted_users = sortByAverageDistance(users);
     var leaderboard = document.getElementById("leaderboard-popup")
-    leaderboard.innerHTML = "<br>";
-    for(var user in users) {
-        score = users[user];
-        leaderboard.innerHTML += user + "<br>Correct Guesses: " + String(score.correctGuesses) + " out of " + String(score.totalGuesses) + "<br>Average Distance: " + String(parseInt(score.averageDistance)) + " Km<br><br>";
+    leaderboard.innerHTML = "";
+    for(var i in sorted_users) {
+        var username = sorted_users[i][0];
+        var score = sorted_users[i][1];
+        var rank = parseInt(i) + 1;
+        var color = users[username]['color'];
+        leaderboard.innerHTML += '<h3 style="color:' + color + '">' + String(rank) + ": " + username + "</h3>"; 
+        leaderboard.innerHTML += "Correct Guesses: " + String(score.correctGuesses) + " out of " + String(score.totalGuesses);
+        leaderboard.innerHTML += "<br>Average Distance: " + String(parseInt(score.averageDistance)) + " Km<br>";
     }
+    leaderboard.innerHTML += "<br>";
+}
+
+function sortByAverageDistance(users) {
+    var u = Object.keys(users).map(function(key) {
+        return [key, users[key]];
+    });
+
+    console.log(u);
+
+    var sorted_users = u.sort(function(x, y) {
+        return x[1]['averageDistance'] - y[1]['averageDistance'];
+    });
+    console.log(sorted_users);
+    return sorted_users;
 }

@@ -2,11 +2,32 @@ from config import LOG, db
 import json
 import requests
 
+class ColorTakenException(Exception):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+    def __str__(self):
+        if self.message:
+            return self.message
+        else:
+            return "ColorTakenException raised"
+
+class UsernameTakenException(Exception):
+    def __init__(self, *args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+    def __str__(self):
+        if self.message:
+            return self.message
+        else:
+            return "UsernameTakenException raised"
+
 def getGame(room):
-    g = db.games.find({ 'room': room })
-    LOG.info(g)
-    LOG.info(g.count())
-    LOG.info(g.collection)
+    g = db.games.find({'room': room})
     try:
         game = g[0]
         LOG.info(game)
@@ -31,10 +52,17 @@ def updateGame(room, game):
     LOG.info(game)
     db.games.update({'room': room}, game)
 
-def addUser(room, username):
+def addUser(room, username, color):
     LOG.info("Adding user: " + username + " to room: " + room)
     game = getGame(room)
+    if username in game['game']['users'].keys():
+        raise UsernameTakenException("Username is already taken.")
+    for user in game['game']['users']:
+        LOG.info(user)
+        if game['game']['users'][user]['color'] == color:
+            raise ColorTakenException("Another user already has choosen " + color)
     game['game']['users'][username] = {
+        'color': color,
         'totalGuesses': 0,
         'correctGuesses': 0,
         'averageDistance': 0,

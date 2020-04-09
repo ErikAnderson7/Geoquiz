@@ -6,18 +6,31 @@
     <body>
         <div id="join-room">
             <div id="join-room-box">
-            <div>
-              <h1 class="prompt">Join a Multiplayer Game</h2>
-              <div id="join-room-info">
-                <label class="prompt" for="username">Username</h2>
-                <input id="username" name="username" type="text">
-                <label class="prompt" for="room">Room</h2>
-                <input id="room" name="room" type="text">
-                <input class="input-button" id="join-room-button" type="button" value="Join Multiplayer Game" onclick="joinRoom()"/>
-              </div>     
+                <div id="join-room-info">
+                    <h1 class="prompt">Join a Multiplayer Game</h1>
+                    <label class="prompt-label" for="username">Username</label>
+                    <input class="join-room-input" id="username" name="username" type="text"/>
+                    <label class="prompt-label" for="room">Room</label>
+                    <input class="join-room-input" id="room" name="room" type="text"/>
+                    <div>
+                        <label class="prompt-label" for="color">Pick a Color </label>
+                        <select class="color-picker" id="color" name="Pick a Color">
+                            <option style="display:none" disabled selected value>--</option>
+                            <option style="color:blue" value="blue">Blue</option>
+                            <option style="color:cyan" value="cyan">Cyan</option>
+                            <option style="color:purple" value="purple">Purple</option>
+                            <option style="color:yellow" value="yellow">Yellow</option>
+                            <option style="color:orange" value="orange">Orange</option>
+                            <option style="color:brown" value="brown">Brown</option>
+                            <option style="color:red" value="red">Red</option>
+                            <option style="color:hotpink" value="hotpink">Pink</option>
+                        </select>
+                    </div>
+                    <p id="join-error-message"></p>
+                    <input class="input-button" id="join-room-button" type="button" value="Join Multiplayer Game" onclick="joinRoom()"/>
+                </div>     
             </div>
-            </div>
-          </div>
+        </div>
         <div id="top-bar">
             <div id="top-bar-items">
                 <a class="link-button" href="/Singleplayer">Singleplayer</a>
@@ -27,15 +40,17 @@
         </div>
         <div id="map-holder"></div>
         <div id="bottom-bar">
-            <div id="bottom-bar-items">
+            <div id="bottom-bar-prompt">
                 <h1 class="prompt" id="prompt-prompt">Guess: </h1>
                 <h1 class="prompt" id="prompt-country"></h1> 
             </div>
-            <div id ="bottom-bar-guesses">
-                <h1 class="guess" id="guess-correct">Correct: </h1>
-                <h1 class="guess" id="guess-correct-count">0</h1>
-                <h1 class="guess" id="guess-total"> Total: </h1>
-                <h1 class="guess" id="guess-total-count">0</h1>
+            <div id="bottom-bar-guesses">
+                <h1 class="prompt" id="guess-correct">Correct: </h1>
+                <h1 class="prompt" id="guess-correct-count">0</h1>
+                <h1 class="prompt" id="guess-total"> Total: </h1>
+                <h1 class="prompt" id="guess-total-count">0</h1>
+            </div>
+            <div id="bottom-bar-leaderboard">
                 <div class="popup">
                     <span class="popuptext" id="leaderboard-popup"></span>
                 </div>
