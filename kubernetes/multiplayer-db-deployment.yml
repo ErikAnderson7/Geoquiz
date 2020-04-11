@@ -4,42 +4,42 @@ metadata:
   creationTimestamp: null
   labels:
     name: database
-  name: postgres
+  name: multiplayer-db
 spec:
   progressDeadlineSeconds: 2147483647
   replicas: 1
   selector:
     matchLabels:
-      service: postgres
+      service: multiplayer-db
   template:
     metadata:
       creationTimestamp: null
       labels:
-        service: postgres
+        service: multiplayer-db
     spec:
       containers:
-      - name: postgres
-        image: erikanderson7/geoquiz-db
+      - name: multiplayer-db
+        image: mongo:4.2-bionic
         env:
-          - name: POSTGRES_USER
+          - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: postgres-credentials
+                name: multiplayer-db-credentials
                 key: user
-          - name: POSTGRES_PASSWORD
+          - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: postgres-credentials
+                name: multiplayer-db-credentials
                 key: password
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-volume-mount
+        - mountPath: /var/lib/multiplayer-db/data
+          name: multiplayer-volume-mount
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: postgres-volume-mount
-        persistentVolumeClaim:
-          claimName: postgres-pvc
+        - name: multiplayer-volume-mount
+          persistentVolumeClaim:
+            claimName: multiplayer-pvc

@@ -4,19 +4,19 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    name: flask
-  name: flask
+    name: geoquiz-multiplayer
+  name: geoquiz-multiplayer
 spec:
   progressDeadlineSeconds: 2147483647
   replicas: 1
   selector:
     matchLabels:
-      app: flask
+      app: geoquiz-multiplayer
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: flask
+        app: geoquiz-multiplayer
     spec:
       containers:
       - env:
@@ -24,17 +24,17 @@ spec:
           value: development
         - name: APP_SETTINGS
           value: project.config.DevelopmentConfig
-        - name: POSTGRES_USER
+        - name: MONGODB_USER
           valueFrom:
             secretKeyRef:
               key: user
-              name: postgres-credentials
-        - name: POSTGRES_PASSWORD
+              name: multiplayer-db-credentials
+        - name: MONGODB_PASSWORD
           valueFrom:
             secretKeyRef:
               key: password
-              name: postgres-credentials
-        image: erikanderson7/geoquiz:latest
+              name: multiplayer-db-credentials
+        image: erikanderson7/geoquiz-multiplayer:latest
         imagePullPolicy: Always
         name: flask
         resources: {}

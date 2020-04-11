@@ -33,7 +33,7 @@ def getGame(room):
         LOG.info(game)
     except IndexError as e:
         LOG.info("Game: " + room + " Does not yet exist, creating new game")
-        question = requests.get('http://server:5000/game/getQuestion').json()
+        question = requests.get('http://geoquiz:5000/game/getQuestion').json()
         game = {'room': room, 
                 'game': {
                             'question': {
@@ -88,7 +88,7 @@ def addGuess(room, username, guess):
 
 def addNewQuestion(room):
     game = getGame(room)
-    question = requests.get('http://server:5000/game/getQuestion').json()
+    question = requests.get('http://geoquiz:5000/game/getQuestion').json()
     game['game']['question']['guesses'] = {}
     game['game']['question']['Country'] = question['Country']
     updateGame(room, game)

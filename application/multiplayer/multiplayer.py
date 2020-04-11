@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify, request, render_template
+from flask import Flask, Blueprint, jsonify, request, render_template, redirect
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from config import LOG
 import json
@@ -17,14 +17,29 @@ def test():
 @app.route("/maps/getWorld.json")
 def get_world():
     LOG.info("Getting map from backend")
-    mapGeoJSON = requests.get('http://server:5000/maps/getWorld.json').json()
+    mapGeoJSON = requests.get('http://geoquiz:5000/maps/getWorld.json').json()
     return jsonify(mapGeoJSON)
 
 @app.route("/maps/getCountry")
 def get_country():
     country = request.args.get('i', default=0, type = int)
-    mapGeoJSON = requests.get(f'http://server:5000/maps/getCountry?i={country}').json()
+    mapGeoJSON = requests.get(f'http://geoquiz:5000/maps/getCountry?i={country}').json()
     return jsonify(mapGeoJSON)
+
+@app.route("/Singleplayer")
+def redirect_singleplayer():
+    LOG.info("Redirecting user to singleplayer")
+    return redirect("https://www.geoquiz.io/")
+
+@app.route("/Multiplayer")
+def redirect_multiplayer():
+    LOG.info("Redirecting user to multiplayer")
+    return redirect("/")
+
+@app.route("/Statistics")
+def redirect_statistics():
+    LOG.info("Redirecting user to statistics")
+    return redirect("https://www.geoquiz.io/Statistics")
 
 @socketio.on('message')
 def handle_message(message):
@@ -38,7 +53,7 @@ def send_message(message):
 @socketio.on('get-question')
 def get_question(message):
     LOG.info(message)
-    question = requests.get('http://server:5000/game/getQuestion').json()
+    question = requests.get('http://geoquiz:5000/game/getQuestion').json()
     LOG.info(question)
     emit('question', question)
 
@@ -50,7 +65,7 @@ def check_answer(message):
     username = message['username']
     room = message['room']
 
-    check_url = f'http://server:5000/game/checkAnswer?country={country}&guess={guess}'
+    check_url = f'http://geoquiz:5000/game/checkAnswer?country={country}&guess={guess}'
     response = requests.get(check_url).json()
     response['GuessID'] = guess
     response['country'] = country

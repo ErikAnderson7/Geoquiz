@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
 
-  server:
+  geoquiz:
     build:
       context: ./application/backend/
       dockerfile: Dockerfile
