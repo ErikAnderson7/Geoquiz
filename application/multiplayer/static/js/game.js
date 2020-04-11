@@ -104,12 +104,8 @@ function sortByAverageDistance(users) {
     var u = Object.keys(users).map(function(key) {
         return [key, users[key]];
     });
-
-    console.log(u);
-
     var sorted_users = u.sort(function(x, y) {
         return x[1]['averageDistance'] - y[1]['averageDistance'];
     });
-    console.log(sorted_users);
     return sorted_users;
 }

@@ -8,7 +8,7 @@ from games import addUser, getGame, addGuess, addNewQuestion, ColorTakenExceptio
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='http://multiplayer.geoquiz.io')
 
 @app.route("/")
 def test():

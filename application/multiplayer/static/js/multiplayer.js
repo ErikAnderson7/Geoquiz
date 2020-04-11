@@ -14,14 +14,12 @@ function joinRoom() {
         return;
     }
     var c = document.getElementById("color").value;
-    console.log(c);
     if(c === "") {
         setJoinError("Please choose a color");
         return;
     }
     var join_message = {username: user, room: roomID, color: c};
     Game = new MultiplayerGame(user, roomID);
-    console.log(join_message);
     socket.emit('join', join_message)
 }
 
