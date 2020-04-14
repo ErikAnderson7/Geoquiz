@@ -6,7 +6,7 @@ POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
 DATABASE_URL = f'postgres://{POSTGRES_USER}:{POSTGRES_PASSWORD}@postgres:5432/geoquiz'
 
 logging.basicConfig(level=logging.DEBUG)
-logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(filename)s) %(message)s")
+logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(filename)s | %(funcName)s) %(message)s")
 LOG = logging.getLogger()
 LOG.handlers.clear()
 

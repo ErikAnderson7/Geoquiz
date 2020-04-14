@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    name: database
+  name: multiplayer-db
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  selector:
+    matchLabels:
+      service: multiplayer-db
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        service: multiplayer-db
+    spec:
+      containers:
+      - name: multiplayer-db
+        image: mongo:4.2-bionic
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: multiplayer-db-credentials
+                key: user
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: multiplayer-db-credentials
+                key: password
+        volumeMounts:
+        - mountPath: /var/lib/multiplayer-db/data
+          name: multiplayer-volume-mount
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: multiplayer-volume-mount
+          persistentVolumeClaim:
+            claimName: multiplayer-pvc

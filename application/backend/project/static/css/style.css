@@ -112,8 +112,6 @@ svg rect {
     font-family: 'Yanone Kaffeesatz', sans-serif;
 }
 
-
-/* Popup container */
 .popup {
     height: 0%;
     width: 100%;
@@ -125,7 +123,6 @@ svg rect {
     justify-content: space-evenly;
 }
   
-/* The actual popup (appears on top) */
 .popup .popuptext {
     visibility: hidden;
     align-self: center;
@@ -142,7 +139,6 @@ svg rect {
     margin-left: -80px;
 }
 
-/* Toggle this class when clicking on the popup container (hide and show the popup) */
 .popup .show {
     visibility: visible;
     -webkit-animation: fadeIn 1s;

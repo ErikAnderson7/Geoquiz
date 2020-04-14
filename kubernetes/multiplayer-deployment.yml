@@ -1,0 +1,47 @@
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    name: geoquiz-multiplayer
+  name: geoquiz-multiplayer
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  selector:
+    matchLabels:
+      app: geoquiz-multiplayer
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: geoquiz-multiplayer
+    spec:
+      containers:
+      - env:
+        - name: FLASK_ENV
+          value: development
+        - name: APP_SETTINGS
+          value: project.config.DevelopmentConfig
+        - name: MONGODB_USER
+          valueFrom:
+            secretKeyRef:
+              key: user
+              name: multiplayer-db-credentials
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: multiplayer-db-credentials
+        image: erikanderson7/geoquiz-multiplayer:latest
+        imagePullPolicy: Always
+        name: geoquiz-multiplayer
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

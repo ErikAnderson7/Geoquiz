@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: erikanderson7/geoquiz_db
+        image: erikanderson7/geoquiz-db
         env:
           - name: POSTGRES_USER
             valueFrom:

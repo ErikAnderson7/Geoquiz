@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
 
-  server:
+  geoquiz:
     build:
       context: ./application/backend/
       dockerfile: Dockerfile
@@ -25,3 +25,32 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  multiplayer:
+    build:
+      context: ./application/multiplayer
+      dockerfile: Dockerfile
+    ports: 
+      - 5002:5000
+    environment:
+      - MONGODB_USER=mongo
+      - MONGODB_PASSWORD=mongo
+  
+  multiplayer-db:
+    image: mongo:4.2-bionic
+    restart: always
+    expose:
+      - 27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+  
+  multiplayer-db-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongo
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongo
+      ME_CONFIG_MONGODB_SERVER: multiplayer-db

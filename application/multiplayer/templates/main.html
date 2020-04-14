@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <title>Geography Quiz</title>
+    </head>
+    <body>
+        <div id="join-room">
+            <div id="join-room-box">
+                <div id="join-room-info">
+                    <h1 class="prompt">Join a Multiplayer Game</h1>
+                    <label class="prompt-label" for="username">Username</label>
+                    <input class="join-room-input" id="username" name="username" type="text"/>
+                    <label class="prompt-label" for="room">Room</label>
+                    <input class="join-room-input" id="room" name="room" type="text"/>
+                    <div>
+                        <label class="prompt-label" for="color">Pick a Color </label>
+                        <select class="color-picker" id="color" name="Pick a Color">
+                            <option style="display:none" disabled selected value>--</option>
+                            <option style="color:blue" value="blue">Blue</option>
+                            <option style="color:cyan" value="cyan">Cyan</option>
+                            <option style="color:purple" value="purple">Purple</option>
+                            <option style="color:yellow" value="yellow">Yellow</option>
+                            <option style="color:orange" value="orange">Orange</option>
+                            <option style="color:brown" value="brown">Brown</option>
+                            <option style="color:red" value="red">Red</option>
+                            <option style="color:hotpink" value="hotpink">Pink</option>
+                        </select>
+                    </div>
+                    <p id="join-error-message"></p>
+                    <input class="input-button" id="join-room-button" type="button" value="Join Multiplayer Game" onclick="joinRoom()"/>
+                </div>     
+            </div>
+        </div>
+        <div id="top-bar">
+            <div id="top-bar-items">
+                <a class="link-button" href="https://www.geoquiz.io/">Singleplayer</a>
+                <a class="link-button" href="/">Multiplayer</a>
+                <a class="link-button" href="https://www.geoquiz.io/Statistics">Statistics</a>
+            </div>
+        </div>
+        <div id="map-holder"></div>
+        <div id="bottom-bar">
+            <div id="bottom-bar-prompt">
+                <h1 class="prompt" id="prompt-prompt">Guess: </h1>
+                <h1 class="prompt" id="prompt-country"></h1> 
+            </div>
+            <div id="bottom-bar-guesses">
+                <h1 class="prompt" id="guess-correct">Correct: </h1>
+                <h1 class="prompt" id="guess-correct-count">0</h1>
+                <h1 class="prompt" id="guess-total"> Total: </h1>
+                <h1 class="prompt" id="guess-total-count">0</h1>
+            </div>
+            <div id="bottom-bar-leaderboard">
+                <div class="popup">
+                    <span class="popuptext" id="leaderboard-popup"></span>
+                </div>
+                <input class="input-button" id="leaderboard-button" type="button" value="Show Leaderboard" onclick="toggleLeaderboard()"/>
+            </div>
+        </div>
+    </body>
+
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="static/js/multiplayer.js"></script>
+    <script src="static/js/multiplayer-game.js"></script>
+    <script src="static/js/map.js"></script>
+</html>

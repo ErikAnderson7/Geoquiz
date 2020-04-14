@@ -1,0 +1,22 @@
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+spec:
+  rules:
+  - host: internal.geoquiz.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: geoquiz
+          servicePort: 5000
+  - host: internal.multiplayer.geoquiz.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: geoquiz-multiplayer
+          servicePort: 5000
