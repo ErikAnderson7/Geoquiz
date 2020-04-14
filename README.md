@@ -32,3 +32,4 @@ https://github.com/miguelgrinberg/Flask-SocketIO-Chat
 
 gradient stuff
 https://stackoverflow.com/questions/3080421/javascript-color-gradient
+
