@@ -1,3 +1,5 @@
+// Stores information used to send messages to the websocket
+// Also has a field hasGuessed used to control displaying other user's guesses
 class MultiplayerGame {
     constructor(username, room) {
         this.username = username;
@@ -30,6 +32,8 @@ class MultiplayerGame {
     }
 }
 
+// Called when user clicks a country on the map
+// Emits guess event to the server
 function checkAnswer(cid, gcountry) {
     if(!Game.hasGuessed) {
         var answer = {guess: cid, country: gcountry, room: Game.room, username: Game.username};
@@ -38,6 +42,7 @@ function checkAnswer(cid, gcountry) {
     }
 }
 
+// Clears the map by removing the color fills from user guesses
 function resetMap() {
     var countries = document.getElementsByClassName("country");
     for(var i = 0; i < countries.length; i++) {
@@ -45,6 +50,7 @@ function resetMap() {
     }
 }
 
+// Toggles showing the leaderboard to the user
 function toggleLeaderboard() {
     var popup = document.getElementById("leaderboard-popup");
     var button = document.getElementById("leaderboard-button");
@@ -57,6 +63,7 @@ function toggleLeaderboard() {
     
 }  
 
+// Fills the countries that the users have guessed with their selected color if the user has submitted their own guess
 function displayGuesses(user_guesses, users) {
     if(Game.hasGuessed) {
         for(var user in user_guesses) {
@@ -79,11 +86,13 @@ function displayGuesses(user_guesses, users) {
     }
 }
 
+// Updates the user's score in the bottom bar
 function usersGuess(user) {
     document.getElementById("guess-correct-count").innerHTML = user.correctGuesses;
     document.getElementById("guess-total-count").innerHTML = user.totalGuesses;
 }
 
+// Updates the leaderboard
 function updateLeaderboard(users) {
     var sorted_users = sortByAverageDistance(users);
     var leaderboard = document.getElementById("leaderboard-popup")
@@ -100,6 +109,7 @@ function updateLeaderboard(users) {
     leaderboard.innerHTML += "<br>";
 }
 
+// Used in updateLeaderboard to rank users by the average distance of their guesses
 function sortByAverageDistance(users) {
     var u = Object.keys(users).map(function(key) {
         return [key, users[key]];

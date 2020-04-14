@@ -26,3 +26,9 @@ kubectl create -f ./kubernetes/flask-deployment.yml
 
 CDN Socket.io
 https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js
+
+Example of how to structure combined multiplayer and singleplayer app
+https://github.com/miguelgrinberg/Flask-SocketIO-Chat
+
+gradient stuff
+https://stackoverflow.com/questions/3080421/javascript-color-gradient

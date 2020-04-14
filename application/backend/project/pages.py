@@ -6,10 +6,6 @@ pages_blueprint = Blueprint('pages', __name__)
 def main_page():
     return render_template("main.html")
 
-@pages_blueprint.route("/Multiplayer")
-def multiplayer():
-    return redirect("https://multiplayer.geoquiz.io/")
-
 @pages_blueprint.route("/Statistics")
 def statistics():
     return render_template("comingsoon.html")
