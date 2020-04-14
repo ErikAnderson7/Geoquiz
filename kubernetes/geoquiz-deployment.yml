@@ -36,7 +36,7 @@ spec:
               name: postgres-credentials
         image: erikanderson7/geoquiz:latest
         imagePullPolicy: Always
-        name: flask
+        name: geoquiz
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
