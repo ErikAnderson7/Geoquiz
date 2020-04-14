@@ -1,6 +1,36 @@
+from flask_socketio import emit
 from config import LOG, db, user_db
 import json
 import requests
+import threading
+import time
+
+timers = {}
+
+class GameTimer(threading.Thread):
+    def __init__(self, room, round_time):
+        threading.Thread.__init__(self)
+        self.room = room
+        self.round_time = round_time
+    def run(self):
+        LOG.info("Starting timer for Game: " + self.room)
+        while(True):
+            time.sleep(self.round_time) # Sleep 30 seconds
+            LOG.info("Sending new question to Game: " + self.room)
+            game = addNewQuestion(self.room)
+            emit('new-question', game, broadcast=True, room=self.room)
+
+def createTimer(room, round_time):
+    LOG.info("Adding a new timer for Game" + room)
+    timer = GameTimer(room, round_time)
+    timers[room] = timer
+    timer.start()
+    LOG.info(timers)
+
+def stopTimer(room):
+    LOG.info("Removing timer for Game: " + room)
+    del(timers[room])
+    LOG.info(timers)
 
 class ColorTakenException(Exception):
     def __init__(self, *args):
@@ -47,6 +77,7 @@ def getGame(room):
                         }
                 }
         db.games.insert(game)
+        createTimer(room, 30)
     del game['_id']
     return game
 
@@ -129,6 +160,7 @@ def removeUser(sid):
 
     if(len(game['game']['users']) == 0):
         db.games.delete_one({'room': room})
+        stopTimer(room)
         return None
     else:
         updateGame(room, game)
