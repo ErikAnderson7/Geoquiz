@@ -4,7 +4,7 @@ services:
 
   geoquiz:
     build:
-      context: ./application/backend/
+      context: ./application/geoquiz/
       dockerfile: Dockerfile
     ports:
       - 5001:5000
