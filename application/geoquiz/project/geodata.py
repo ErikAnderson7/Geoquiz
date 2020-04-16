@@ -4,9 +4,6 @@ import shapely
 from project.config import LOG
 
 def openGeoData():
-    #path = "data/countries.shp"
-    #countries_df = geopandas.read_file(path)
-
     LOG.info("Opening the Geopandas DF")
     #Using the geopandas dataset for now because it is much more compact and the performance is much better. 
     #Additionally it has useful data such as country name which my data does not. Makes it easier to check answers, etc.
@@ -14,8 +11,9 @@ def openGeoData():
     gpdf = gpdf.drop(columns=['pop_est', 'gdp_md_est']) #Filtering out irrelevant columns.
     gpdf = gpdf[gpdf.name != 'Antarctica'] #Filter out antartica, which coverst the entire map except for some african countries.
     gpdf.insert(0, 'id', range(0, len(gpdf))) #Adding anonymous id's to countries so the names do not reveal what the countries are. 
-     
-    #print(gpdf.head())
+    
+    LOG.info(gpdf.head())
+    LOG.info(len(gpdf))
     return gpdf
 
 def getGameWorldMap():
@@ -69,3 +67,7 @@ def calcDistance(cdf, country1_id, country2_id):
     LOG.info("Distance in Meters: " + str(meters))
     LOG.info("Distance in Kilometers: " + str(km))
     return km
+
+def lookupCountryByID(cid):
+    cdf = openGeoData()
+    country = cdf[cdf.id == cid]['name']
