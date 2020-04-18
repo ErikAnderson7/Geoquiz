@@ -12,8 +12,6 @@ def openGeoData():
     gpdf = gpdf[gpdf.name != 'Antarctica'] #Filter out antartica, which coverst the entire map except for some african countries.
     gpdf.insert(0, 'id', range(0, len(gpdf))) #Adding anonymous id's to countries so the names do not reveal what the countries are. 
     
-    LOG.info(gpdf.head())
-    LOG.info(len(gpdf))
     return gpdf
 
 def getGameWorldMap():
@@ -64,8 +62,6 @@ def calcDistance(cdf, country1_id, country2_id):
 
     meters = round(meters)
     km = round(km, 3)
-    LOG.info("Distance in Meters: " + str(meters))
-    LOG.info("Distance in Kilometers: " + str(km))
     return km
 
 def lookupCountryByID(cid):
