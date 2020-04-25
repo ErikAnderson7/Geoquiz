@@ -64,6 +64,19 @@ def calcDistance(cdf, country1_id, country2_id):
     km = round(km, 3)
     return km
 
-def lookupCountryByID(cid):
+def getCountryList():
     cdf = openGeoData()
-    country = cdf[cdf.id == cid]['name']
+    return cdf['name']
+
+def lookupCountryName(cid):
+    LOG.info("Looking up Country: " + str(cid) + "'s name")
+    cdf = openGeoData()
+    country = cdf[cdf.id == cid].iloc[0]['name']
+    LOG.info(country)
+    return country
+
+def lookupCountryID(country):
+    LOG.info("Looking up " + country + "'s id")
+    cdf = openGeoData()
+    country_id = cdf[cdf.name == country].iloc[0]['id']
+    return country_id

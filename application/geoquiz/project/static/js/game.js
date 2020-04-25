@@ -109,4 +109,5 @@ function hidePopup() {
     popup.innerText = "";
 }
 
+drawGameMap()
 getQuestion();

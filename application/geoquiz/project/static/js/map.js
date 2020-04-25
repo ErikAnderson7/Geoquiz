@@ -37,8 +37,13 @@ function zoomed() {
 // Define map zoom behaviour
 var zoom = d3
   .zoom()
-  .on("zoom", zoomed)
-;
+  .on("zoom", zoomed);
+
+function getTextBox(selection) {
+  selection.each(function(d) {
+    d.bbox = this.getBBox();
+  });
+}
 
 // Function that calculates zoom/pan limits and sets zoom to default value 
 function initiateZoom() {
@@ -56,105 +61,265 @@ function initiateZoom() {
   midX = ($("#map-holder").width() - minZoom * w) / 2;
   midY = ($("#map-holder").height() - minZoom * h) / 2;
   // change zoom transform to min zoom and centre offsets
-  svg.call(zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(minZoom));
+
+  d3.select("#map-svg").call(zoom.transform, d3.zoomIdentity.translate(midX, midY).scale(minZoom));
 }
-
-// zoom to show a bounding box, with optional additional padding as percentage of box size
-function boxZoom(box, centroid, paddingPerc) {
-  minXY = box[0];
-  maxXY = box[1];
-  // find size of map area defined
-  zoomWidth = Math.abs(minXY[0] - maxXY[0]);
-  zoomHeight = Math.abs(minXY[1] - maxXY[1]);
-  // find midpoint of map area defined
-  zoomMidX = centroid[0];
-  zoomMidY = centroid[1];
-  // increase map area to include padding
-  zoomWidth = zoomWidth * (1 + paddingPerc / 100);
-  zoomHeight = zoomHeight * (1 + paddingPerc / 100);
-  // find scale required for area to fill svg
-  maxXscale = $("svg").width() / zoomWidth;
-  maxYscale = $("svg").height() / zoomHeight;
-  zoomScale = Math.min(maxXscale, maxYscale);
-  // handle some edge cases
-  // limit to max zoom (handles tiny countries)
-  zoomScale = Math.min(zoomScale, maxZoom);
-  // limit to min zoom (handles large countries and countries that span the date line)
-  zoomScale = Math.max(zoomScale, minZoom);
-  // Find screen pixel equivalent once scaled
-  offsetX = zoomScale * zoomMidX;
-  offsetY = zoomScale * zoomMidY;
-  // Find offset to centre, making sure no gap at left or top of holder
-  dleft = Math.min(0, $("svg").width() / 2 - offsetX);
-  dtop = Math.min(0, $("svg").height() / 2 - offsetY);
-  // Make sure no gap at bottom or right of holder
-  dleft = Math.max($("svg").width() - w * zoomScale, dleft);
-  dtop = Math.max($("svg").height() - h * zoomScale, dtop);
-  // set zoom
-  svg
-    .transition()
-    .duration(500)
-    .call(
-      zoom.transform,
-      d3.zoomIdentity.translate(dleft, dtop).scale(zoomScale)
-    );
-}
-
-
-
 
 // on window resize
 $(window).resize(function() {
   // Resize SVG
-  svg
-    .attr("width", $("#map-holder").width())
-    .attr("height", $("#map-holder").height())
-  ;
+  d3.select("#map-svg").attr("width", $("#map-holder").width())
+     .attr("height", $("#map-holder").height());
   initiateZoom();
 });
 
-// create an SVG
-var svg = d3
-  .select("#map-holder")
-  .append("svg")
-  // set to the same size as the "map-holder" div
-  .attr("width", $("#map-holder").width())
-  .attr("height", $("#map-holder").height())
-  // add zoom functionality
-  .call(zoom)
-;
+// Draw Game Map
+function drawGameMap() {
+  $("#map-holder").empty(); // Clear the map contents.
 
+  var svg = d3
+    .select("#map-holder")
+    .append("svg")
+    .attr("id", "map-svg")
+    .attr("class", "map-svg")
+    .attr("width", $("#map-holder").width())
+    .attr("height", $("#map-holder").height())
+    .call(zoom);
 
-// get map data
-d3.json(
-  location.href + "/maps/getWorld.json", function(json) {
-    json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
-    countriesGroup = svg.append("g").attr("id", "map");
-    // add a background rectangle
-    countriesGroup
-      .append("rect")
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("width", 3000)
-      .attr("height", 1500);
-    // draw a path for each feature/country
-    countries = countriesGroup
-      .selectAll("path")
-      .data(json.features)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .attr("id", function(d, i) {
-        return "country" + d.properties.id;
-      })
-      .attr("class", "country")
-      .on("click", function(d, i) {
-        var country = document.getElementById("prompt-country").innerHTML;
-        checkAnswer(i, country);
-      });
-    initiateZoom();
-  }
-);
+  d3.json(
+    "/maps/getWorld.json", function(json) {
+      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+      countriesGroup = svg.append("g").attr("id", "game-map");
+      // add a background rectangle
+      countriesGroup
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 3000)
+        .attr("height", 1500);
+      // draw a path for each feature/country
+      countries = countriesGroup
+        .selectAll("path")
+        .data(json.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("id", function(d, i) {
+          return "country" + d.properties.id;
+        })
+        .attr("class", "country")
+        .on("click", function(d, i) {
+          var country = document.getElementById("prompt-country").innerHTML;
+          checkAnswer(i, country);
+        });
+      initiateZoom("#map-holder");
+    }
+  );
+}
+
+function drawStatsMap(country) {
+  $("#map-holder").empty(); // Clear the map contents.
+  
+  var svg = d3
+    .select("#map-holder")
+    .append("svg")
+    .attr("id", "map-svg")
+    .attr("class", "map-svg")
+    .attr("width", $("#map-holder").width())
+    .attr("height", $("#map-holder").height())
+    .call(zoom);
+
+  d3.json(`/stats/whenCorrectMap?country=${country}`, function(json) {
+      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+      countriesGroup = svg.append("g").attr("id", "stats-map");
+      // add a background rectangle
+      countriesGroup
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 3000)
+        .attr("height", 1500);
+      // draw a path for each feature/country
+      countries = countriesGroup
+        .selectAll("path")
+        .data(json.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("id", function(d, i) {
+          return "country" + d.properties.id;
+        })
+        .attr("class", "country")
+        .attr("style", function(d) {
+          var color = getColor(d.properties.percentOfGuesses);
+          var style = `fill:${color};`;
+          if(d.properties.name === country) {
+            style += 'stroke:green;stroke-width:6;';
+          }
+          return style;
+        })
+        .on("mouseover", function(d, i) {
+          d3.select("#countryLabel" + d.properties.id).style("display", "block");
+        })
+        .on("mouseout", function(d, i) {
+          d3.select("#countryLabel" + d.properties.id).style("display", "none");
+        });
+      countryLabels = countriesGroup
+        .selectAll("g")
+        .data(json.features)
+        .enter()
+        .append("g")
+        .attr("class", "countryLabel")
+        .attr("id", function(d) {
+            return "countryLabel" + d.properties.id;
+        })
+        .attr("transform", function(d) {
+            return (
+              "translate(" + path.centroid(d)[0] + "," + path.centroid(d)[1] + ")"
+            );
+        })
+        // add mouseover functionality to the label
+        .on("mouseover", function(d, i) {
+            d3.select(this).style("display", "block");
+        })
+        .on("mouseout", function(d, i) {
+            d3.select(this).style("display", "none");
+        });
+      // add the text to the label group showing country name
+      countryLabels
+        .append("text")
+        .attr("class", "countryName")
+        .style("text-anchor", "middle")
+        .attr("dx", 0)
+        .attr("dy", 0)
+        .attr("font-size", "20")
+        .html(function(d) {
+          var text = `<tspan x="0" dy=".6em">${d.properties.name}</tspan>
+                      <tspan x="0" dy="1.2em">Distance: ${String(parseInt(d.properties.distance))} Km</tspan>
+                      <tspan x="0" dy="1.2em">Times Guessed: ${d.properties.count}</tspan>
+                      <tspan x="0" dy="1.2em">Percent of Guesses: ${(d.properties.percentOfGuesses*100).toFixed(2)}%</tspan>`;
+          return text;
+        })
+        .call(getTextBox);
+      // add a background rectangle the same size as the text
+      countryLabels
+        .insert("rect", "text")
+        .attr("class", "countryLabelBg")
+        .attr("rx", "10")
+        .attr("ry", "10")
+        .attr("transform", function(d) {
+          return "translate(" + (d.bbox.x - 20) + "," + (d.bbox.y - 10) + ")";
+        })
+        .attr("width", function(d) {
+          return 280;
+        })
+        .attr("height", function(d) {
+          return 120;
+        });
+      initiateZoom();
+    }
+  );
+}
+
+function drawGlobalStatsMap() {
+  $("#map-holder").empty(); // Clear the map contents.
+  
+  var svg = d3
+    .select("#map-holder")
+    .append("svg")
+    .attr("id", "map-svg")
+    .attr("class", "map-svg")
+    .attr("width", $("#map-holder").width())
+    .attr("height", $("#map-holder").height())
+    .call(zoom);
+
+  d3.json("/stats/globalStatsMap", function(json) {
+      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+      countriesGroup = svg.append("g").attr("id", "stats-map");
+      // add a background rectangle
+      countriesGroup
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 3000)
+        .attr("height", 1500);
+      // draw a path for each feature/country
+      countries = countriesGroup
+        .selectAll("path")
+        .data(json.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("id", function(d, i) {
+          return "country" + d.properties.id;
+        })
+        .attr("class", "country")
+        .attr("style", function(d) {
+          var color = getColor(d.properties.percentCorrect);
+          return `fill:${color}`;
+        })
+        .on("mouseover", function(d, i) {
+          d3.select("#countryLabel" + d.properties.id).style("display", "block");
+        })
+        .on("mouseout", function(d, i) {
+          d3.select("#countryLabel" + d.properties.id).style("display", "none");
+        });
+      countryLabels = countriesGroup
+        .selectAll("g")
+        .data(json.features)
+        .enter()
+        .append("g")
+        .attr("class", "countryLabel")
+        .attr("id", function(d) {
+            return "countryLabel" + d.properties.id;
+        })
+        .attr("transform", function(d) {
+            return (
+              "translate(" + path.centroid(d)[0] + "," + path.centroid(d)[1] + ")"
+            );
+        })
+        // add mouseover functionality to the label
+        .on("mouseover", function(d, i) {
+            d3.select(this).style("display", "block");
+        })
+        .on("mouseout", function(d, i) {
+            d3.select(this).style("display", "none");
+        });
+      // add the text to the label group showing country name
+      countryLabels
+        .append("text")
+        .attr("class", "countryName")
+        .style("text-anchor", "middle")
+        .attr("dx", 0)
+        .attr("dy", 0)
+        .attr("font-size", "20")
+        .html(function(d) {
+          var text = `<tspan x="0" dy=".6em">${d.properties.name}</tspan>
+                      <tspan x="0" dy="1.2em">${d.properties.correctCount} Correct Guesses</tspan>
+                      <tspan x="0" dy="1.2em">${d.properties.totalCount} Total Attempts</tspan>
+                      <tspan x="0" dy="1.2em">Correct Guesses: ${(d.properties.percentCorrect*100).toFixed(2)}%</tspan>`;
+          return text;
+        })
+        .call(getTextBox);
+      // add a background rectangle the same size as the text
+      countryLabels
+        .insert("rect", "text")
+        .attr("class", "countryLabelBg")
+        .attr("rx", "10")
+        .attr("ry", "10")
+        .attr("transform", function(d) {
+          return "translate(" + (d.bbox.x - 25) + "," + (d.bbox.y - 10) + ")";
+        })
+        .attr("width", function(d) {
+          return 280;
+        })
+        .attr("height", function(d) {
+          return 120;
+        });
+      initiateZoom();
+    }
+  );
+}
 
 function drawCountry(i) {
   var url = location.href + "/maps/getCountry?i=" + i;
