@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="static/css/style.css">
+        <title>Statistics</title>
+    </head>
+    <body>
+        <div id="top-bar">
+            <div id="top-bar-items">
+                <a class="link-button" href="/Singleplayer">Singleplayer</a>
+                <a class="link-button" href="http://multiplayer.geoquiz.io">Multiplayer</a>
+                <a class="link-button" href="/Statistics">Statistics</a>
+            </div>
+        </div>
+        <div id="stats-holder" class="stats-holder">
+            <div id="map-holder" class="stats-map-holder"></div>
+            <div id="stats-sidebar" class="side-bar">
+                <div id="stat-type-selector">
+                    <div id="stat-type-picker">
+                        <label for="global" class="prompt-label">
+                            <input type="radio" id="global" name="stat-type" value="global" class="stat-type" checked> Global 
+                        </label><br>
+                        <label for="country" class="prompt-label">
+                            <input type="radio" id="country" name="stat-type" value="country" class="stat-type"> Country 
+                        </label>
+                    </div>
+                    <div id="country-picker-holder">
+                        <label id="country-picker-label" class="prompt-label" for="country">Select Country </label>
+                        <select class="country-picker" id="country-picker" name="country">
+                            <!-- Renders the list of countries -->
+                            {% for country in countryList %}
+                            <option value="{{country}}">{{country}}</option>
+                            {%endfor%}
+                        </select>
+                    </div>
+                </div>
+                <div class="stats-dividing-line">
+                    <svg height="5" width="300" class="line">
+                        <line x1="0" y1="0" x2="300" y2="0" style="stroke:#919191;stroke-width:2;align-self: center;"></line>
+                    </svg>
+                </div>
+                <div id="stats"></div>
+                <div class="stats-dividing-line">
+                    <svg height="5" width="300" class="line">
+                        <line x1="0" y1="0" x2="300" y2="0" style="stroke:#919191;stroke-width:2;align-self: center;"></line>
+                    </svg>
+                </div>
+                <div id="color-gradient-label">
+                    <h3 style="color: white;">0%</h3>
+                    <h3 style="color: white;">100%</h3>
+                </div>
+                <div id="color-gradient"></div>
+            </div>
+        </div>
+    </body>
+
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="static/js/map.js"></script>
+    <script src="static/js/statistics.js"></script>
+</html>
