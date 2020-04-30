@@ -74,6 +74,7 @@ $(window).resize(function() {
 });
 
 // Draw Game Map
+// Does not display elements such as name of the county
 function drawGameMap() {
   $("#map-holder").empty(); // Clear the map contents.
 
@@ -87,8 +88,8 @@ function drawGameMap() {
     .call(zoom);
 
   d3.json(
-    "/maps/getWorld.json", function(json) {
-      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+    "/maps/getWorld.json", function(response) {
+      json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "game-map");
       // add a background rectangle
       countriesGroup
@@ -117,6 +118,8 @@ function drawGameMap() {
   );
 }
 
+// Draws percountry stats map 
+// Colors each country depending on the percentage of all guesses each country was guessed for a given country
 function drawStatsMap(country) {
   $("#map-holder").empty(); // Clear the map contents.
   
@@ -129,8 +132,8 @@ function drawStatsMap(country) {
     .attr("height", $("#map-holder").height())
     .call(zoom);
 
-  d3.json(`/stats/whenCorrectMap?country=${country}`, function(json) {
-      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+  d3.json(`/stats/whenCorrectMap?country=${country}`, function(response) {
+      json = JSON.parse(response);
       countriesGroup = svg.append("g").attr("id", "stats-map");
       // add a background rectangle
       countriesGroup
@@ -221,6 +224,8 @@ function drawStatsMap(country) {
   );
 }
 
+// Draws the global stats map
+// Colors each country depending on what percentage of guesses for that country were correct
 function drawGlobalStatsMap() {
   $("#map-holder").empty(); // Clear the map contents.
   
@@ -233,8 +238,8 @@ function drawGlobalStatsMap() {
     .attr("height", $("#map-holder").height())
     .call(zoom);
 
-  d3.json("/stats/globalStatsMap", function(json) {
-      json = JSON.parse(json); // for some reason my data is not json despite being json so I have to make it json nice
+  d3.json("/stats/globalStatsMap", function(response) {
+      json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "stats-map");
       // add a background rectangle
       countriesGroup

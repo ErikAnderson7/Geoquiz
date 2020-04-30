@@ -77,7 +77,6 @@ function perCountryStatsHTML(data) {
     var html = `<h3 class="stat-line">Guessed Correctly ${data.timesGuessedCorrectly} times out of ${data.totalGuesses} guesses</h3>`;
     html += `<h3 class="stat-line"> Percent Guessed Correctly: ${(data.percentGuessedCorrectly*100).toFixed(2)}%</h3>`;
     html += `<h3 class="stat-line"> Average Guess Distance: ${data.averageDistance} Km</h3>`;
-    console.log(data.mostCommonlyConfused);
     if(data.mostCommonlyConfused != null) {
         html += `<h3 class="stat-line"> Most Commonly Guessed Countries:</h3>`;
         Object.keys(data.mostCommonlyConfused).forEach(function(key) {

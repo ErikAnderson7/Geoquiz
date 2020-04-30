@@ -3,45 +3,38 @@ import geopandas
 import shapely
 from project.config import LOG
 
+# Opens the Geodata Dataframe. Uses Geopandas built in dataset
 def openGeoData():
-    LOG.info("Opening the Geopandas DF")
-    #Using the geopandas dataset for now because it is much more compact and the performance is much better. 
-    #Additionally it has useful data such as country name which my data does not. Makes it easier to check answers, etc.
     gpdf = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
-    gpdf = gpdf.drop(columns=['pop_est', 'gdp_md_est']) #Filtering out irrelevant columns.
-    gpdf = gpdf[gpdf.name != 'Antarctica'] #Filter out antartica, which coverst the entire map except for some african countries.
-    gpdf.insert(0, 'id', range(0, len(gpdf))) #Adding anonymous id's to countries so the names do not reveal what the countries are. 
+    gpdf = gpdf.drop(columns=['pop_est', 'gdp_md_est']) # Filtering out irrelevant columns.
+    gpdf = gpdf[gpdf.name != 'Antarctica'] # Filter out antartica
+    gpdf.insert(0, 'id', range(0, len(gpdf))) # Adding Country IDs 
     
     return gpdf
 
-def getGameWorldMap():
+# Returns the map of the world without any country idenifying information
+def getGameWorldData():
     LOG.info("Getting the game world map")
-    cdf = openGeoData()
-    cdf = cdf.drop(columns = ['iso_a3', 'continent', 'name'])
-    return cdf
+    gdpf = openGeoData()
+    gdpf = gdpf.drop(columns = ['iso_a3', 'continent', 'name']) # Drop the name and ISO as they can reveal the country
+    return gdpf
 
-def printCountriesDF(gdf):
-    LOG.info(gdf.show())
-
-def gdfToGeoJSON(gdf):
-    LOG.info("Converting the GDF to GeoJSON")
-    return gdf.to_json()
-
-def getCountry(cdf, country_id):
+# Returns the geographic data for a specific country
+def getCountry(country_id):
     LOG.info("Getting Country: " + str(country_id))
-    geo = cdf[cdf.id == country_id]
-    country = geo.to_json()
+    gpdf = getGameWorldData()
+    geo = gpdf[gpdf.id == country_id]
     return country
 
 # Calculates the distance between two countries with the haversine method
-def calcDistance(cdf, country1_id, country2_id):
+def calculateDistance(gpdf, country1_id, country2_id):
     LOG.info("Calculating the Distance between Countries: " + str(country1_id) + " and " + str(country2_id))
     import math
 
-    c1 = cdf.iloc[country1_id]
+    # Get the coordinates of the centroid of each country
+    c1 = gpdf.iloc[country1_id]
     country1Coords = [c1['geometry'].centroid.x, c1['geometry'].centroid.y]
-
-    c2 = cdf.iloc[country2_id]
+    c2 = gpdf.iloc[country2_id]
     country2Coords = [c2['geometry'].centroid.x, c2['geometry'].centroid.y]
 
     lon1, lat1 = country1Coords
@@ -64,19 +57,22 @@ def calcDistance(cdf, country1_id, country2_id):
     km = round(km, 3)
     return km
 
+# Returns a list of countries
 def getCountryList():
-    cdf = openGeoData()
-    return cdf['name']
+    LOG.info("Getting list of countries")
+    gpdf = openGeoData()
+    return gpdf['name']
 
+# Looks up a country's name based on its ID
 def lookupCountryName(cid):
     LOG.info("Looking up Country: " + str(cid) + "'s name")
-    cdf = openGeoData()
-    country = cdf[cdf.id == cid].iloc[0]['name']
-    LOG.info(country)
+    gpdf = openGeoData()
+    country = gpdf[gpdf.id == cid].iloc[0]['name']
     return country
 
+# Looks up a country's ID based on its name
 def lookupCountryID(country):
     LOG.info("Looking up " + country + "'s id")
-    cdf = openGeoData()
-    country_id = cdf[cdf.name == country].iloc[0]['id']
-    return country_id
+    gpdf = openGeoData()
+    country_id = gpdf[gpdf.name == country].iloc[0]['id']
+    return int(country_id) # Convert from numpy int64 to python int

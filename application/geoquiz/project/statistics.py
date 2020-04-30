@@ -31,7 +31,7 @@ def getCorrectCountryMap():
     combined_gdf = geopandas.GeoDataFrame(combined_df)
     combined_gdf = combined_gdf.fillna(0) # replace NaN values with 0
     # Calculate distances for countries that have not been guessed for the requested country
-    combined_gdf['distance'] = combined_gdf.apply(lambda x: x['distance'] if x['distance'] != 0 else gd.calcDistance(geodata_df, country_id, int(x['id'])), axis=1)
+    combined_gdf['distance'] = combined_gdf.apply(lambda x: x['distance'] if x['distance'] != 0 else gd.calculateDistance(geodata_df, country_id, int(x['id'])), axis=1)
 
     # These columns are not needed during displaying the map
     combined_gdf = combined_gdf.drop(columns=['correctcountry', 'guesscountry'])
@@ -236,7 +236,7 @@ def calculateStats(df):
     LOG.info("Calculating stats")
     cdf = gd.openGeoData()
     # Calculate distance between correct country and guess country for each row (axis=1)
-    df['distance'] = df.apply(lambda x: gd.calcDistance(cdf, x['correctcountry'], x['guesscountry']), axis=1) 
+    df['distance'] = df.apply(lambda x: gd.calculateDistance(cdf, x['correctcountry'], x['guesscountry']), axis=1) 
     
     # Calculate the percentage of guesses for each country
     total_guesses = df['count'].sum()
@@ -255,7 +255,7 @@ def calculateGlobalAverageDistance():
         .statement
     df = pandas.read_sql_query(dist_query, db.session.bind)
     cdf = gd.openGeoData()
-    df['distance'] = df.apply(lambda x: gd.calcDistance(cdf, x['correctcountry'], x['guesscountry']), axis=1)
+    df['distance'] = df.apply(lambda x: gd.calculateDistance(cdf, x['correctcountry'], x['guesscountry']), axis=1)
     
     totalGuesses = df['count'].sum()
     averageDistance = (df['distance'] * df['count']).sum() / totalGuesses

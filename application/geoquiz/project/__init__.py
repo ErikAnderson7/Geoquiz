@@ -39,9 +39,4 @@ def create_app(script_info=None):
     from project.statistics import stats_blueprint
     app.register_blueprint(stats_blueprint, url_prefix="/stats")
 
-    # shell context for flask cli
-    @app.shell_context_processor
-    def ctx():
-        return {'app': app, 'db': db}
-
     return app

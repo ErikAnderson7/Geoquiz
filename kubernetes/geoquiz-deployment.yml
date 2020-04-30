@@ -23,7 +23,7 @@ spec:
         - name: FLASK_ENV
           value: development
         - name: APP_SETTINGS
-          value: project.config.DevelopmentConfig
+          value: project.config.ProductionConfig
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
