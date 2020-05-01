@@ -11,8 +11,8 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins=['http://multiplayer.geoquiz.io', 'http://localhost:5002'])
 
 @app.route("/")
-def test():
-    return render_template("main.html")
+def multiplayer():
+    return render_template("multiplayer.html")
 
 # Gets the map of the world from the normal backend
 @app.route("/maps/getWorld.json")

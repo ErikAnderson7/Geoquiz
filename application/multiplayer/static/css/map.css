@@ -1,0 +1,51 @@
+.map-svg {
+    width: 100%;
+    height: 100%;
+}
+
+svg path:hover {
+    fill: #384d58;
+    filter: drop-shadow(0px 3px 3px rgba(100, 100, 100, 0.4));
+}
+
+body {
+    margin: 0;
+    background-color: #0f4c75;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-weight: 200;
+    font-size: 17px;
+}
+
+svg rect {
+    fill: #0f4c75;   /* map background colour */
+}
+
+.country{
+    fill: #1b262c;   /* country colour */
+    stroke: #919191; /* country border colour */
+    stroke-width: 1; /* country border width */
+}
+
+.country-on{
+    fill: #4B5358;   /* highlight colour for selected country */
+}
+
+.countryLabel{
+    display: none;   /* hide all country labels by default */
+}
+
+.countryName{
+    fill: white;   /* country label text colour */
+}
+
+.countryLabelBg{
+    fill: #1b262c;
+    stroke:#919191;
+    stroke-width:1;
+    opacity:0.8   /* country label background colour */
+}
+
+.game-map-holder {
+    width: 100%;
+    height: 85%;
+}
