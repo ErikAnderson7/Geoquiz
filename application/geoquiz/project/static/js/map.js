@@ -88,7 +88,7 @@ function drawGameMap() {
     .call(zoom);
 
   d3.json(
-    "/maps/getWorld.json", function(response) {
+    "/game/getGameMap", function(response) {
       json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "game-map");
       // add a background rectangle
@@ -132,7 +132,7 @@ function drawStatsMap(country) {
     .attr("height", $("#map-holder").height())
     .call(zoom);
 
-  d3.json(`/stats/whenCorrectMap?country=${country}`, function(response) {
+  d3.json(`/stats/perCountryMap?country=${country}`, function(response) {
       json = JSON.parse(response);
       countriesGroup = svg.append("g").attr("id", "stats-map");
       // add a background rectangle
@@ -238,7 +238,7 @@ function drawGlobalStatsMap() {
     .attr("height", $("#map-holder").height())
     .call(zoom);
 
-  d3.json("/stats/globalStatsMap", function(response) {
+  d3.json("/stats/globalMap", function(response) {
       json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "stats-map");
       // add a background rectangle
@@ -327,7 +327,7 @@ function drawGlobalStatsMap() {
 }
 
 function drawCountry(i) {
-  var url = location.href + "/maps/getCountry?i=" + i;
+  var url = "/game/getCountryMap?country=" + i;
   d3.json(
     url, function(json) {
       json = JSON.parse(json);

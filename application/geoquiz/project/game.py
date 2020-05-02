@@ -46,3 +46,17 @@ def checkAnswer():
         distance = gd.calculateDistance(gpdf, country_id, guess)
         response = {'Correct' : 'False', 'CorrectID' : country_id, 'Guess' : guess_country, 'Distance' : int(distance)}
     return jsonify(response)
+
+# Returns the GeoJSON data for the entire world
+@game_blueprint.route("/getGameMap")
+def gameMap():
+	LOG.info("Getting the world map")
+	countries_df = gd.getGameWorldData()
+	return jsonify(countries_df.to_json())
+
+# Returns the GeoJSON data for a specific country
+@game_blueprint.route("/getCountryMap")
+def countryMap():
+	country = request.args.get('i', default=0, type = int)
+	LOG.info("Getting country: " + str(country))
+	return jsonify(gd.getCountry(country).to_json())

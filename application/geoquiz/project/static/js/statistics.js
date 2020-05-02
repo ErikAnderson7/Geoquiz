@@ -42,7 +42,7 @@ function updateStats() {
 
 // Gets the global stats and displays them in the side bar
 function globalSidebarStats() {
-    var url = "/stats/globalStats";
+    var url = "/stats/global";
     document.getElementById("stats").innerHTML = "";
 
     var xhttp = new XMLHttpRequest();
@@ -58,7 +58,7 @@ function globalSidebarStats() {
 
 // Gets the stats for the requested country and displays them in the side bar
 function perCountrySiderbarStats(country) {
-    var url = `/stats/whenCorrect?country=${country}`;
+    var url = `/stats/perCountry?country=${country}`;
     document.getElementById("stats").innerHTML = "";
 
     var xhttp = new XMLHttpRequest();
