@@ -2,14 +2,15 @@ import os
 import logging
 from pymongo import MongoClient
 
-# Mongodb connection for storing users and multiplayer games
+# Mongodb connection variables
 mongo_user = os.environ.get('MONGODB_USER')
 mongo_password = os.environ.get('MONGODB_PASSWORD')
 
+# Mongodb connection
 mongoConnectionURL = f'mongodb://{mongo_user}:{mongo_password}@multiplayer-db:27017'
 mongo = MongoClient(mongoConnectionURL)
-db=mongo.multiplayergames
-user_db=mongo.users
+gameDB=mongo.multiplayergames
+userDB=mongo.users
 
 logging.basicConfig(level=logging.DEBUG)
 logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] (%(filename)s | %(funcName)s) %(message)s")

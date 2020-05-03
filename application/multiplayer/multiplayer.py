@@ -10,33 +10,29 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app, cors_allowed_origins=['http://multiplayer.geoquiz.io', 'http://localhost:5002'])
 
+# Routes the user to the multiplayer game
 @app.route("/")
 def multiplayer():
     return render_template("multiplayer.html")
 
 # Gets the map of the world from the normal backend
-@app.route("/maps/getWorld.json")
-def get_world():
+@app.route("/game/getGameMap")
+def getGameWorld():
     LOG.info("Getting map from Geoquiz")
-    mapGeoJSON = requests.get('http://geoquiz:5000/maps/getWorld.json').json()
+    mapGeoJSON = requests.get('http://geoquiz:5000/game/getGameMap').json()
     return jsonify(mapGeoJSON)
 
 # Gets a country GeoJSON data from the normal backend
-@app.route("/maps/getCountry")
-def get_country():
+@app.route("/game/getCountryMap")
+def getCountry():
     country = request.args.get('i', default=0, type = int)
-    mapGeoJSON = requests.get(f'http://geoquiz:5000/maps/getCountry?i={country}').json()
+    mapGeoJSON = requests.get(f'http://geoquiz:5000/game/getCountryMap?i={country}').json()
     return jsonify(mapGeoJSON)
-
-@app.route("/Multiplayer")
-def redirect_multiplayer():
-    LOG.info("Redirecting user to multiplayer")
-    return redirect("/")
 
 # Handles when a user submits a guess
 @socketio.on('guess')
-def check_answer(message):
-    LOG.info("Message: " + str(message) + " Type: " +str(type(message)))
+def checkAnswer(message):
+    LOG.info("User has submitted their guess. Message: " + str(message))
     country = message['country']
     guess = message['guess']
     username = message['username']
@@ -56,34 +52,38 @@ def check_answer(message):
     if(len(game['game']['users']) == len(game['game']['question']['guesses'])):
         LOG.info("Everyone has answered the question sending new question in 5 seconds")
         sleep(5)
-        game = addNewQuestion(room)
+        addNewQuestion(room)
+        game = getGame(room)
         emit('new-question', game, broadcast=True, room=room)
 
 # Handles when a user is trying to join a game
 # Emits join-error event if they are trying to use an already taken username or color
 # If joining game was successful it broadcasts to every user in the game
 @socketio.on('join')
-def user_join_room(message):
-    LOG.info("Message: " + str(message) + " Type: " +str(type(message)))
+def userJoiningRoom(message):
+    LOG.info("User is attemping to join a game. Message: " + str(message))
     username = message['username']
     room = message['room']
     color = message['color']
+
+    # Try to add the user to the multiplayer game
     try:
         addUser(room, username, color, request.sid)
         join_room(room)
         LOG.info("User: " + str(username) + " has joined room: " + str(room))
         game = getGame(room)
         emit('joined', game, broadcast=True, room=room)
-    except ColorTakenException as e:
+    except ColorTakenException as e: # Username already taken
         emit('join-error', str(e))
-    except UsernameTakenException as e:
+    except UsernameTakenException as e: # Color already taken
         emit('join-error', str(e))
 
 # Handles when a user disconnects from the websocket server
 # Removes the user from the game they were in
 @socketio.on('disconnect')
-def disconnect_user():
+def userDisconnected():
     LOG.info("User: " + str(request.sid) + " has disconnected")
     game = removeUser(request.sid)
-    if(game != None):
+    if(game != None): # If the game still exists tell other users that another user has disconnected.
+        LOG.info("Sending updated game state to remaining users")
         emit('user-disconnected', game, broadcast=True, room=game['room'])

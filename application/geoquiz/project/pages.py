@@ -6,9 +6,9 @@ pages_blueprint = Blueprint('pages', __name__)
 
 # Routes the user to the singleplayer game
 @pages_blueprint.route("/")
-def main_page():
+def singleplayer():
     LOG.info("Opening single player game")
-    return render_template("main.html")
+    return render_template("singleplayer.html")
 
 # Routes the user to the statistics page
 @pages_blueprint.route("/Statistics")

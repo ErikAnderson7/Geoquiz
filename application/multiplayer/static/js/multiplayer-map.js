@@ -88,7 +88,7 @@ function drawGameMap() {
     .call(zoom);
 
   d3.json(
-    "/maps/getWorld.json", function(response) {
+    "/game/getGameMap", function(response) {
       json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "game-map");
       // add a background rectangle
@@ -119,7 +119,7 @@ function drawGameMap() {
 }
 
 function drawCountry(i) {
-  var url = location.href + "/maps/getCountry?i=" + i;
+  var url = location.href + "/game/getCountryMap?i=" + i;
   d3.json(
     url, function(json) {
       json = JSON.parse(json);

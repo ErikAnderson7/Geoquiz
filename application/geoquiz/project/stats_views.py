@@ -12,6 +12,7 @@ import project.stats as stats
 
 stats_blueprint = Blueprint('stats', __name__)
 
+# Gets the map containing stats for a given country
 @stats_blueprint.route("/perCountryMap")
 def perCountryMap():
     country = request.args.get('country', default=0, type = str)
@@ -22,6 +23,7 @@ def perCountryMap():
 
     return jsonify(countryMap)
 
+# Gets the general stats for a given country
 @stats_blueprint.route("/perCountry")
 def perCountryStats():
     country = request.args.get('country', default=0, type = str)
@@ -31,6 +33,7 @@ def perCountryStats():
 
     return jsonify(countryStats)
 
+# Gets the map containing general stats for each country
 @stats_blueprint.route("/globalMap")
 def globalMap():
     LOG.info("Getting global stats map")
@@ -38,6 +41,7 @@ def globalMap():
 
     return jsonify(globalStatsMap)
 
+# Gets the general stats for the entire world
 @stats_blueprint.route("/global")
 def globalStats():
     LOG.info("Getting global stats")
