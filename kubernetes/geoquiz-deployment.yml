@@ -21,7 +21,7 @@ spec:
       containers:
       - env:
         - name: FLASK_ENV
-          value: development
+          value: production
         - name: APP_SETTINGS
           value: project.config.ProductionConfig
         - name: POSTGRES_USER

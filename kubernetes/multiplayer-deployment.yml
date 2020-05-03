@@ -21,9 +21,9 @@ spec:
       containers:
       - env:
         - name: FLASK_ENV
-          value: development
+          value: production
         - name: APP_SETTINGS
-          value: project.config.DevelopmentConfig
+          value: project.config.ProductionConfig
         - name: MONGODB_USER
           valueFrom:
             secretKeyRef:
