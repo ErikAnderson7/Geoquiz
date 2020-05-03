@@ -16,7 +16,7 @@ stats_blueprint = Blueprint('stats', __name__)
 @stats_blueprint.route("/perCountryMap")
 def perCountryMap():
     country = request.args.get('country', default=0, type = str)
-    LOG.info("Getting stats for: " + str(country))
+    LOG.info("Getting " + country + "'s stats map")
     
     country_id = gd.lookupCountryID(country)
     countryMap = stats.getPerCountryMap(country_id)
@@ -27,9 +27,9 @@ def perCountryMap():
 @stats_blueprint.route("/perCountry")
 def perCountryStats():
     country = request.args.get('country', default=0, type = str)
-    country_id = gd.lookupCountryID(country)
-    LOG.info(country_id)
-    countryStats = stats.getPerCountryStats(country_id)
+    countryid = gd.lookupCountryID(country)
+    LOG.info("Getting " + country + "'s stats")
+    countryStats = stats.getPerCountryStats(countryid)
 
     return jsonify(countryStats)
 

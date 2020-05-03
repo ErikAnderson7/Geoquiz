@@ -11,6 +11,7 @@ import project.geodata as gd
 # Queries database for guesses where countryid was the correct country
 # Converts the query to a pandas dataframe
 def getPerCountryDF(countryid):
+    LOG.info("Getting Country: " + str(countryid) + "'s dataframe")
     # SQLAlchemy Query 
     # SELECT correctcountry, guesscountry, count(guesscountry) from guesses where correctcountry = countryid group by guesscountry, correctcountry order by guesscountry asc;
     countryQuery = db.session.query(Guess.correctcountry, Guess.guesscountry, func.count(Guess.guesscountry).label('count')) \
@@ -31,6 +32,7 @@ def getPerCountryDF(countryid):
 # Queries database for guesses where country_id was the correct country
 # Converts the query to a pandas dataframe
 def getGlobalDF():
+    LOG.info("Getting global stats dataframe")
     # Query that gets the number of correct guesses for each country
     correctCountQuery = db.session.query(Guess.correctcountry.label('countryid'), func.count(Guess.guesscountry).label('correctCount')) \
         .filter(Guess.correctcountry == Guess.guesscountry) \
@@ -65,7 +67,7 @@ def getGlobalDF():
 
 # Calculates the distance between countries, percent of total guesses for each country
 def calculatePerCountryStats(countryDF):
-    LOG.info("Calculating stats")
+    LOG.info("Calculating per country stats")
     geodataDF = gd.openGeoData()
     # Calculate distance between correct country and guess country for each row (axis=1)
     countryDF['distance'] = countryDF.apply(lambda x: gd.calculateDistance(geodataDF, x['correctcountry'], x['guesscountry']), axis=1) 
@@ -82,6 +84,7 @@ def calculatePerCountryStats(countryDF):
 
 # Calculates the average distance of every guess
 def calculateGlobalAverageDistance():
+    LOG.info("Calculating average distance between correctcountry and guesscountry for every guess")
     distanceQuery = db.session.query(Guess.correctcountry, Guess.guesscountry, func.count(Guess.guesscountry).label('count')) \
         .group_by(Guess.guesscountry, Guess.correctcountry) \
         .order_by(asc(Guess.correctcountry)) \
@@ -96,6 +99,7 @@ def calculateGlobalAverageDistance():
 
 # Returns a given country's statistics
 def getPerCountryStats(countryid):
+    LOG.info("Calculating Country: " + str(countryid) + "'s stats")
     countryDF = getPerCountryDF(countryid)
     
     try:
@@ -160,7 +164,7 @@ def getPerCountryStats(countryid):
 
 # Returns a map containing statistics for a given country
 def getPerCountryMap(countryid):
-
+    LOG.info("Getting Country: " + str(countryid) + "'s statistics map")
     statsDF = getPerCountryDF(countryid)
     geodataDF = gd.openGeoData()
 
@@ -179,6 +183,7 @@ def getPerCountryMap(countryid):
 
 # Returns a map containing global statistics
 def getGlobalStatsMap():
+    LOG.info("Getting global stats map")
     globalDF = getGlobalDF()
     geodataDF = gd.openGeoData()
 
@@ -190,6 +195,7 @@ def getGlobalStatsMap():
 
 # Returns global statistics
 def getGlobalStats():
+    LOG.info("Calculating global stats")
     globalDF = getGlobalDF()
 
     totalGuesses = int(globalDF['totalCount'].sum())

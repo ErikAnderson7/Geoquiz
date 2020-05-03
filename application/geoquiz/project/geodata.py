@@ -1,6 +1,7 @@
 import pandas
 import geopandas
 import shapely
+import math
 from project.config import LOG
 
 # Opens the Geodata Dataframe. Uses Geopandas built in dataset
@@ -20,31 +21,32 @@ def getGameWorldData():
     return geodataDF
 
 # Returns the geographic data for a specific country
-def getCountry(country_id):
-    LOG.info("Getting Country: " + str(country_id))
+def getCountry(countryid):
+    LOG.info("Getting Country: " + str(countryid))
     geodataDF = getGameWorldData()
-    geo = geodataDF[geodataDF.id == country_id]
-    return country
+    countryDF = geodataDF[geodataDF.id == countryid]
+    return countryDF
 
 # Calculates the distance between two countries with the haversine method
-def calculateDistance(geodataDF, country1_id, country2_id):
-    LOG.info("Calculating the Distance between Countries: " + str(country1_id) + " and " + str(country2_id))
-    import math
+def calculateDistance(geodataDF, country1id, country2id):
+    LOG.info("Calculating the Distance between Countries: " + str(country1id) + " and " + str(country2id))
 
     # Get the coordinates of the centroid of each country
-    c1 = geodataDF.iloc[country1_id]
-    country1Coords = [c1['geometry'].centroid.x, c1['geometry'].centroid.y]
-    c2 = geodataDF.iloc[country2_id]
-    country2Coords = [c2['geometry'].centroid.x, c2['geometry'].centroid.y]
+    country1 = geodataDF.iloc[country1id]
+    country1Coords = [country1['geometry'].centroid.x, country1['geometry'].centroid.y]
+    country2 = geodataDF.iloc[country2id]
+    country2Coords = [country2['geometry'].centroid.x, country2['geometry'].centroid.y]
 
-    lon1, lat1 = country1Coords
-    lon2, lat2 = country2Coords
+    longitude1, latitude1 = country1Coords
+    longitude2, latitude2 = country2Coords
+
+    # Haversine method to calculate distance between two points
     R = 6371000  # radius of Earth in meters
-    phi_1 = math.radians(lat1)
-    phi_2 = math.radians(lat2)
+    phi_1 = math.radians(latitude1)
+    phi_2 = math.radians(latitude2)
 
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
+    delta_phi = math.radians(latitude2 - latitude1)
+    delta_lambda = math.radians(longitude2 - longitude1)
 
     a = math.sin(delta_phi / 2.0) ** 2 + math.cos(phi_1) * math.cos(phi_2) * math.sin(delta_lambda / 2.0) ** 2
 
@@ -52,9 +54,8 @@ def calculateDistance(geodataDF, country1_id, country2_id):
 
     meters = R * c  # output distance in meters
     km = meters / 1000.0  # output distance in kilometers
-
-    meters = round(meters)
     km = round(km, 3)
+
     return km
 
 # Returns a list of countries
@@ -64,15 +65,15 @@ def getCountryList():
     return geodataDF['name']
 
 # Looks up a country's name based on its ID
-def lookupCountryName(cid):
-    LOG.info("Looking up Country: " + str(cid) + "'s name")
+def lookupCountryName(countryid):
+    LOG.info("Looking up Country: " + str(countryid) + "'s name")
     geodataDF = openGeoData()
-    country = geodataDF[geodataDF.id == cid].iloc[0]['name']
+    country = geodataDF[geodataDF.id == countryid].iloc[0]['name']
     return country
 
 # Looks up a country's ID based on its name
 def lookupCountryID(country):
     LOG.info("Looking up " + country + "'s id")
     geodatDF = openGeoData()
-    country_id = geodatDF[geodatDF.name == country].iloc[0]['id']
-    return int(country_id) # Convert from numpy int64 to python int
+    countryid = geodatDF[geodatDF.name == country].iloc[0]['id']
+    return int(countryid) # Convert from numpy int64 to python int

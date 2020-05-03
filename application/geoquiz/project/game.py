@@ -11,12 +11,15 @@ game_blueprint = Blueprint('game', __name__)
 # Gets a new question by randomly selecting a country id
 @game_blueprint.route("/getQuestion")
 def getQuestion():
-    gpdf = gd.openGeoData()
-    count = gpdf.shape[0] # Number of rows in the dataframe
-    cid = random.randint(0, count)
-    country = gpdf.iloc[cid]
-    response = {'Country': country['name']}
+    geodataDF = gd.openGeoData()
+    countryCount = geodataDF.shape[0] # Number of countries in the dataframe
+    
+    countryid = random.randint(0, countryCount)
+    country = gd.lookupCountryName(countryid)
+    
+    response = {'Country': country}
     LOG.info("Getting a new question: " + str(response))
+
     return jsonify(response)
 
 # Checks a user's answer. 
@@ -24,27 +27,29 @@ def getQuestion():
 # Country is the correct country.
 @game_blueprint.route("/checkAnswer")
 def checkAnswer():
-    country = request.args.get('country', default='NONE', type = str)
-    guess = request.args.get('guess', default = 0, type = int)
-    gpdf = gd.openGeoData()
-
-    LOG.info("Checking an answer Country: " + country + " Guess: " + str(guess))
+    correctCountry = request.args.get('country', default='NONE', type = str)
+    guessCountryid = request.args.get('guess', default = 0, type = int)
     
-    country_id = gd.lookupCountryID(country)
+    correctCountryid = gd.lookupCountryID(correctCountry)
+    guessCountry = gd.lookupCountryName(guessCountryid)
 
-    LOG.debug("Inserting the guess into the databse")
+    LOG.info("Checking an answer Correct Country: " + correctCountry + " User's Guess: " + guessCountry)
+    LOG.info("Checking an answer Correct Country ID: " + str(correctCountryid) + " User's Guess ID: " + str(guessCountryid))
+    
     # Insert the guess into the database
-    g = Guess(correctcountry=country_id, guesscountry=guess)
-    db.session.add(Guess(correctcountry=country_id, guesscountry=guess))
+    LOG.debug("Inserting the guess into the databse")
+    userGuess = Guess(correctcountry=correctCountryid, guesscountry=guessCountryid)
+    db.session.add(userGuess)
     db.session.commit()
     LOG.debug("Insertion complete")
 
-    if guess == country_id:
+    if guessCountryid == correctCountryid:
         response = {'Correct' : 'True'}
     else:
-        guess_country = gpdf.iloc[guess]['name']
-        distance = gd.calculateDistance(gpdf, country_id, guess)
-        response = {'Correct' : 'False', 'CorrectID' : country_id, 'Guess' : guess_country, 'Distance' : int(distance)}
+        geodataDF = gd.openGeoData()
+        distance = gd.calculateDistance(geodataDF, correctCountryid, guessCountryid)
+        response = {'Correct' : 'False', 'CorrectID' : correctCountryid, 'Guess' : guessCountry, 'Distance' : int(distance)}
+    
     return jsonify(response)
 
 # Returns the GeoJSON data for the entire world
