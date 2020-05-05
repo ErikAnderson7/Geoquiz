@@ -23,7 +23,6 @@ function joinRoom() {
     }
     r = r.replace(/\s+/g, ''); // Remove whitespace from room name
     r = r.toLowerCase();
-    console.log(r);
     var join_message = {username: u, room: r, color: c};
     Game = new MultiplayerGame(u, r);
     socket.emit('join', join_message)
@@ -71,6 +70,5 @@ socket.on('join-error', function(error) {
 
 // When a user has disconnected remove them from the leaderboard
 socket.on('user-disconnected', function(message) {
-    console.log(message);
     updateLeaderboard(message.game.users);
 });

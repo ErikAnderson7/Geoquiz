@@ -27,11 +27,9 @@ var path = d3
 function zoomed() {
   t = d3
     .event
-    .transform
-  ;
+    .transform;
   countriesGroup
-    .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")")
-  ;
+    .attr("transform","translate(" + [t.x, t.y] + ")scale(" + t.k + ")");
 }
 
 // Define map zoom behaviour
