@@ -1,12 +1,13 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="static/css/style.css">
-        <title>Geography Quiz</title>
+        <link rel="stylesheet" type="text/css" href="static/css/geoquiz.css">
+        <link rel="stylesheet" type="text/css" href="static/css/map.css">
+        <title>Geoquiz</title>
     </head>
     <body>
         <div id="top-bar">
             <div id="top-bar-items">
-                <a class="link-button" href="/Singleplayer">Singleplayer</a>
+                <a class="link-button" href="http://www.geoquiz.io/">Singleplayer</a>
                 <a class="link-button" href="http://multiplayer.geoquiz.io">Multiplayer</a>
                 <a class="link-button" href="/Statistics">Statistics</a>
             </div>
@@ -17,15 +18,15 @@
         </div>
         <div id="bottom-bar">
             <div id="bottom-bar-items">
-                <h1 class="prompt" id="prompt-prompt">Guess: </h1>
-                <h1 class="prompt" id="prompt-country"></h1>
+                <h1 class="bottom-bar-text" id="prompt">Guess: </h1>
+                <h1 class="bottom-bar-text" id="prompt-country"></h1>
                 <input id="reset-button" type="button" value="Next Question" onclick="resetAndGetNextQuestion()"/> 
             </div>
             <div id ="bottom-bar-guesses">
-                <h1 class="guess" id="guess-correct">Correct:</h1>
-                <h1 class="guess" id="guess-correct-count">0</h1>
-                <h1 class="guess" id="guess-total">Total:</h1>
-                <h1 class="guess" id="guess-total-count">0</h1>
+                <h1 class="bottom-bar-text" id="guess-correct">Correct:</h1>
+                <h1 class="bottom-bar-text" id="guess-correct-count">0</h1>
+                <h1 class="bottom-bar-text" id="guess-total">Total:</h1>
+                <h1 class="bottom-bar-text" id="guess-total-count">0</h1>
             </div>
         </div>
     </body>

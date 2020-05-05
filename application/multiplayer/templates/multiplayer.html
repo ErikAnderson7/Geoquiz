@@ -1,13 +1,22 @@
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="static/css/style.css">
-        <title>Geography Quiz</title>
+        <link rel="stylesheet" type="text/css" href="static/css/geoquiz.css">
+        <link rel="stylesheet" type="text/css" href="static/css/multiplayer.css">
+        <link rel="stylesheet" type="text/css" href="static/css/map.css">
+        <title>Multiplayer Geoquiz</title>
     </head>
     <body>
+        <div id="top-bar">
+            <div id="top-bar-items">
+                <a class="link-button" href="https://www.geoquiz.io/">Singleplayer</a>
+                <a class="link-button" href="http://multiplayer.geoquiz.io/">Multiplayer</a>
+                <a class="link-button" href="https://www.geoquiz.io/Statistics">Statistics</a>
+            </div>
+        </div>
         <div id="join-room">
             <div id="join-room-box">
                 <div id="join-room-info">
-                    <h1 class="prompt">Join a Multiplayer Game</h1>
+                    <h1 class="join-prompt">Join a Multiplayer Game</h1>
                     <label class="prompt-label" for="username">Username</label>
                     <input class="join-room-input" id="username" name="username" type="text"/>
                     <label class="prompt-label" for="room">Room</label>
@@ -31,27 +40,20 @@
                 </div>     
             </div>
         </div>
-        <div id="top-bar">
-            <div id="top-bar-items">
-                <a class="link-button" href="https://www.geoquiz.io/">Singleplayer</a>
-                <a class="link-button" href="/">Multiplayer</a>
-                <a class="link-button" href="https://www.geoquiz.io/Statistics">Statistics</a>
-            </div>
-        </div>
-        <div id="map-holder"></div>
+        <div id="map-holder" class="game-map-holder"></div>
         <div id="bottom-bar">
-            <div id="bottom-bar-prompt">
-                <h1 class="prompt" id="prompt-prompt">Guess: </h1>
-                <h1 class="prompt" id="prompt-country"></h1> 
+            <div id="bottom-bar-items">
+                <h1 class="bottom-bar-text" id="prompt">Guess: </h1>
+                <h1 class="bottom-bar-text" id="prompt-country"></h1> 
             </div>
             <div id="bottom-bar-guesses">
-                <h1 class="prompt" id="guess-correct">Correct: </h1>
-                <h1 class="prompt" id="guess-correct-count">0</h1>
-                <h1 class="prompt" id="guess-total"> Total: </h1>
-                <h1 class="prompt" id="guess-total-count">0</h1>
+                <h1 class="bottom-bar-text" id="guess-correct">Correct: </h1>
+                <h1 class="bottom-bar-text" id="guess-correct-count">0</h1>
+                <h1 class="bottom-bar-text" id="guess-total"> Total: </h1>
+                <h1 class="bottom-bar-text" id="guess-total-count">0</h1>
             </div>
-            <div id="bottom-bar-leaderboard">
-                <div class="popup">
+            <div id="leaderboard">
+                <div class="popup" id="leaderboard-popup-container">
                     <span class="popuptext" id="leaderboard-popup"></span>
                 </div>
                 <input class="input-button" id="leaderboard-button" type="button" value="Show Leaderboard" onclick="toggleLeaderboard()"/>
@@ -66,5 +68,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="static/js/multiplayer.js"></script>
     <script src="static/js/multiplayer-game.js"></script>
-    <script src="static/js/map.js"></script>
+    <script src="static/js/multiplayer-map.js"></script>
 </html>

@@ -1,7 +1,8 @@
-from config import LOG, db, user_db
+from config import LOG, gameDB, userDB
 import json
 import requests
 
+# ColorTakenException occurs when a user tries to join a room with a color another user has already chosen
 class ColorTakenException(Exception):
     def __init__(self, *args):
         if args:
@@ -14,6 +15,7 @@ class ColorTakenException(Exception):
         else:
             return "ColorTakenException raised"
 
+# UserNameTakenException occurs when a user tries to join a room with a username another user has already chosen
 class UsernameTakenException(Exception):
     def __init__(self, *args):
         if args:
@@ -29,39 +31,42 @@ class UsernameTakenException(Exception):
 # Gets a game with matching room
 # If the game does not exist it creates the game
 def getGame(room):
-    room = room.replace(" ", "").lower() # Remove whitespace and convert to lower case
-    g = db.games.find({'room': room})
+    g = gameDB.games.find({'room': room})
     try:
         game = g[0]
-        LOG.info(game)
     except IndexError as e:
         LOG.info("Game: " + room + " Does not yet exist, creating new game")
-        question = requests.get('http://geoquiz:5000/game/getQuestion').json()
-        game = {'room': room, 
-                'game': {
-                            'question': {
-                                'Country': question['Country'],
-                                'guesses': {}
-                            }, 
-                            'users': {}
-                        }
-                }
-        db.games.insert(game)
-    del game['_id']
+        game = createGame(room)
+
+    del game['_id'] # Remove the object id as it is not JSON serializable
+
+    return game
+
+# Creates a new game with given room name
+def createGame(room):
+    question = requests.get('http://geoquiz:5000/game/getQuestion').json()
+    game = {'room': room, 
+            'game': {
+                        'question': {
+                            'Country': question['Country'],
+                            'guesses': {}
+                        }, 
+                        'users': {}
+                    }
+            }
+    gameDB.games.insert(game)
+    
     return game
 
 # Updates the game in mongodb
 def updateGame(room, game):
-    room = room.replace(" ", "").lower() # Remove whitespace and convert to lower case
     LOG.info("Updating Game: " + str(room))
-    LOG.info(game)
-    db.games.update({'room': room}, game)
+    gameDB.games.update({'room': room}, game)
 
 # Adds a user to a multiplayer game and the user db
 # Throws exections if the choosen username or color is already taken
 def addUser(room, username, color, sid):
     LOG.info("Adding user: " + username + " to room: " + room)
-    room = room.replace(" ", "").lower() # Remove whitespace and convert to lower case
     
     game = getGame(room)
     if username in game['game']['users'].keys():
@@ -76,7 +81,7 @@ def addUser(room, username, color, sid):
         'username': username
     }
     LOG.info("Added new user " + str(user))
-    user_db.users.insert(user)
+    userDB.users.insert(user)
 
     game['game']['users'][username] = {
         'color': color,
@@ -115,20 +120,20 @@ def addNewQuestion(room):
     game['game']['question']['Country'] = question['Country']
     updateGame(room, game)
 
-    return game
-
 # Removes a user from the game they were in
 # Finds the user in the user db and removes them from the game they were in and the user db
 def removeUser(sid):
-    user = user_db.users.find({'sid': sid})[0]
+    user = userDB.users.find({'sid': sid})[0]
     room = user['room']
     game = getGame(room)
 
+    # Remove the user from the game and the user db
     del(game['game']['users'][user['username']])
-    user_db.users.delete_one({'sid': sid})
+    userDB.users.delete_one({'sid': sid})
 
+    # If the game no longer has any users delete the game from the game db and return None
     if(len(game['game']['users']) == 0):
-        db.games.delete_one({'room': room})
+        gameDB.games.delete_one({'room': room})
         return None
     else:
         updateGame(room, game)

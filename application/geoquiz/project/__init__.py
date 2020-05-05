@@ -10,6 +10,7 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
+# Create the entrypoint into the application
 def create_app(script_info=None):
 
     # instantiate the app
@@ -30,18 +31,10 @@ def create_app(script_info=None):
     from project.pages import pages_blueprint
     app.register_blueprint(pages_blueprint, url_prefix='/')
 
-    from project.maps import maps_blueprint
-    app.register_blueprint(maps_blueprint, url_prefix='/maps')
-
     from project.game import game_blueprint
     app.register_blueprint(game_blueprint, url_prefix='/game')
 
-    from project.statistics import stats_blueprint
+    from project.stats_views import stats_blueprint
     app.register_blueprint(stats_blueprint, url_prefix="/stats")
-
-    # shell context for flask cli
-    @app.shell_context_processor
-    def ctx():
-        return {'app': app, 'db': db}
 
     return app

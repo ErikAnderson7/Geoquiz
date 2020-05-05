@@ -8,42 +8,60 @@ from project.guesses import Guess
 
 game_blueprint = Blueprint('game', __name__)
 
+# Gets a new question by randomly selecting a country id
 @game_blueprint.route("/getQuestion")
 def getQuestion():
-    cdf = gd.openGeoData()
-    count = cdf.shape[0] # Number of rows in the dataframe
-    cid = random.randint(0, count)
-    country = cdf.iloc[cid]
-    response = {'Country': country['name']}
+    geodataDF = gd.openGeoData()
+    countryCount = geodataDF.shape[0] # Number of countries in the dataframe
+    
+    countryid = random.randint(0, countryCount)
+    country = gd.lookupCountryName(countryid)
+    
+    response = {'Country': country}
     LOG.info("Getting a new question: " + str(response))
+
     return jsonify(response)
 
+# Checks a user's answer. 
+# Guess is the id of the country the user clicked on
+# Country is the correct country.
 @game_blueprint.route("/checkAnswer")
 def checkAnswer():
-    country = request.args.get('country', default='NONE', type = str)
-    guess = request.args.get('guess', default = 0, type = int)
-    cdf = gd.openGeoData()
-
-    LOG.info("Checking an answer Country: " + country + " Guess: " + str(guess))
+    correctCountry = request.args.get('country', default='NONE', type = str)
+    guessCountryid = request.args.get('guess', default = 0, type = int)
     
-    c = cdf[cdf.name == country]
-    country_id = int(c['id'])
+    correctCountryid = gd.lookupCountryID(correctCountry)
+    guessCountry = gd.lookupCountryName(guessCountryid)
 
-    LOG.debug("Inserting the guess into the databse")
+    LOG.info("Checking an answer Correct Country: " + correctCountry + " User's Guess: " + guessCountry)
+    LOG.info("Checking an answer Correct Country ID: " + str(correctCountryid) + " User's Guess ID: " + str(guessCountryid))
+    
     # Insert the guess into the database
-    g = Guess(correctcountry=country_id, guesscountry=guess)
-    LOG.debug(g.to_json())
-    db.session.add(Guess(correctcountry=country_id, guesscountry=guess))
+    LOG.debug("Inserting the guess into the databse")
+    userGuess = Guess(correctcountry=correctCountryid, guesscountry=guessCountryid)
+    db.session.add(userGuess)
     db.session.commit()
-    LOG.debug("Insetion complete")
+    LOG.debug("Insertion complete")
 
-    if guess == country_id:
-        LOG.debug("Guess was Correct Nice Job!")
+    if guessCountryid == correctCountryid:
         response = {'Correct' : 'True'}
     else:
-        guess_country = cdf.iloc[guess]['name']
-        LOG.debug("Guess was incorrect. :( Guessed Country: " + str(guess_country))
-        distance = gd.calcDistance(cdf, country_id, guess)
-        response = {'Correct' : 'False', 'CorrectID' : country_id, 'Guess' : guess_country, 'Distance' : int(distance)}
-        LOG.debug(response)
+        geodataDF = gd.openGeoData()
+        distance = gd.calculateDistance(geodataDF, correctCountryid, guessCountryid)
+        response = {'Correct' : 'False', 'CorrectID' : correctCountryid, 'Guess' : guessCountry, 'Distance' : int(distance)}
+    
     return jsonify(response)
+
+# Returns the GeoJSON data for the entire world
+@game_blueprint.route("/getGameMap")
+def gameMap():
+	LOG.info("Getting the world map")
+	countries_df = gd.getGameWorldData()
+	return jsonify(countries_df.to_json())
+
+# Returns the GeoJSON data for a specific country
+@game_blueprint.route("/getCountryMap")
+def countryMap():
+	country = request.args.get('i', default=0, type = int)
+	LOG.info("Getting country: " + str(country))
+	return jsonify(gd.getCountry(country).to_json())

@@ -1,16 +1,18 @@
+// socketio connection to websocket server
 var socket = io();
 
+// MultiplayerGame that keeps track of the room, username, and user's score
 var Game;
 
 // Handles users joining a game, checks for blank field values
 function joinRoom() {
-    var user = document.getElementById("username").value;
-    if(user === "") {
+    var u = document.getElementById("username").value;
+    if(u === "") {
         setJoinError("Please choose a username");
         return;
     }
-    var roomID = document.getElementById("room").value;
-    if(roomID === "") {
+    var r = document.getElementById("room").value;
+    if(r === "") {
         setJoinError("Please enter a room");
         return;
     }
@@ -19,8 +21,10 @@ function joinRoom() {
         setJoinError("Please choose a color");
         return;
     }
-    var join_message = {username: user, room: roomID, color: c};
-    Game = new MultiplayerGame(user, roomID);
+    r = r.replace(/\s+/g, ''); // Remove whitespace from room name
+    r = r.toLowerCase();
+    var join_message = {username: u, room: r, color: c};
+    Game = new MultiplayerGame(u, r);
     socket.emit('join', join_message)
 }
 
