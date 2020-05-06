@@ -1,6 +1,6 @@
 # Geoquiz
 
-[Geoquiz](www.geoquiz.io)
+[Geoquiz](https://www.geoquiz.io)
 
 A Web Application where users can test their knowledge of Geography. Utilizes Javascript on the frontend and Python using Flask for the backend.
 
