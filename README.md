@@ -6,7 +6,7 @@ A Web Application where users can test their knowledge of Geography. Utilizes Ja
 
 ## Installation
 
-Docker and Docker-Compose are required
+Docker and Docker-Compose are required, Kubernetes is optional unless you want to deploy to a production environment.
 
 To create a development environment
     
