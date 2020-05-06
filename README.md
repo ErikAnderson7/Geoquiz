@@ -1,35 +1,17 @@
 # Geoquiz
 
-Tutorial for drawing maps with d3
-https://medium.com/@andybarefoot/making-a-map-using-d3-js-8aa3637304ee
+A Web Application where users can test their knowledge of Geography. Utilizes Javascript on the frontend and Python using Flask for the backend.
 
-Tutorial for running Flask apps on Kubernetes
-https://testdriven.io/blog/running-flask-on-kubernetes/
+![Screenshot](https://user-images.githubusercontent.com/29104093/81207687-915d5980-8f93-11ea-8863-a0ad6990a115.png)
 
-To build container image for application:
-sudo docker build -t erikanderson7/geoquiz:latest ./application/backend --no-cache
+## Installation
 
-To push the image to docker hub:
-sudo docker push erikanderson7/geoquiz:latest
+Docker and Docker-Compose are required
 
-Get into dev database:
-sudo docker exec -it cis598finalproject_postgres_1 psql -U postgres
-Get into prod db:
-kubectl get pods
-copy the postgres pod name
-kubectl exec -it {postgres pod name} -- psql -U c2FtcGxl --password
+To create a development environment
+    
+    docker-compose up -d --build
 
-To Update the flask deployment on Kubernetes without killing everything:
-kubectl kill deployment flask
-kubectl create -f ./kubernetes/flask-deployment.yml
+To deploy to Kubernetes run the deploy script
 
-
-CDN Socket.io
-https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js
-
-Example of how to structure combined multiplayer and singleplayer app
-https://github.com/miguelgrinberg/Flask-SocketIO-Chat
-
-gradient stuff
-https://stackoverflow.com/questions/3080421/javascript-color-gradient
-
+    ./deploy.sh
