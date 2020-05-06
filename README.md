@@ -2,7 +2,7 @@
 
 A Web Application where users can test their knowledge of Geography. Utilizes Javascript on the frontend and Python using Flask for the backend.
 
-![image](https://user-images.githubusercontent.com/29104093/81207967-03ce3980-8f94-11ea-8323-62dcc0bb1892.png)
+![image](https://user-images.githubusercontent.com/29104093/81208051-206a7180-8f94-11ea-8685-784f9d5aa7d1.png)
 
 ## Installation
 
