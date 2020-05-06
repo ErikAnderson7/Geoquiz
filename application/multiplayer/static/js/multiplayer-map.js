@@ -1,3 +1,4 @@
+// Source for drawing maps: https://medium.com/@andybarefoot/making-a-map-using-d3-js-8aa3637304ee
 // DEFINE VARIABLES
 // Define size of map group
 // Full world map is 2:1 ratio
