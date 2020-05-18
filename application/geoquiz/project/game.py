@@ -9,12 +9,21 @@ from project.guesses import Guess
 game_blueprint = Blueprint('game', __name__)
 
 # Gets a new question by randomly selecting a country id
+# Continent can be provided to specify what continent a user wants a question on
 @game_blueprint.route("/getQuestion")
 def getQuestion():
+    continent = request.args.get('continent', default = None, type = str)
+
     geodataDF = gd.openGeoData()
+
+    if continent != None:
+        LOG.info("User is requesting a question on continent: " + continent)
+        geodataDF = geodataDF[geodataDF.continent == continent]
+
     countryCount = geodataDF.shape[0] # Number of countries in the dataframe
     
-    countryid = random.randint(0, countryCount)
+    i = random.randint(0, countryCount)
+    countryid = geodataDF.iloc[i]['id']
     country = gd.lookupCountryName(countryid)
     
     response = {'Country': country}
