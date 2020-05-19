@@ -74,7 +74,7 @@ $(window).resize(function() {
 
 // Draw Game Map
 // Does not display elements such as name of the county
-function drawGameMap() {
+function drawGameMap(continent) {
   $("#map-holder").empty(); // Clear the map contents.
 
   var svg = d3
@@ -86,8 +86,15 @@ function drawGameMap() {
     .attr("height", $("#map-holder").height())
     .call(zoom);
 
+  var url = "/game/getGameMap";
+  if(GS.continent !== 'World') {
+    url += "?continent=" + String(GS.continent);
+  }
+
+  console.log(url);
+
   d3.json(
-    "/game/getGameMap", function(response) {
+    url, function(response) {
       json = JSON.parse(response); 
       countriesGroup = svg.append("g").attr("id", "game-map");
       // add a background rectangle
@@ -110,7 +117,7 @@ function drawGameMap() {
         .attr("class", "country")
         .on("click", function(d, i) {
           var country = document.getElementById("prompt-country").innerHTML;
-          checkAnswer(i, country);
+          checkAnswer(d.properties.id, country);
         });
       initiateZoom("#map-holder");
     }

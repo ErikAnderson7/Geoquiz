@@ -14,9 +14,15 @@ def openGeoData():
     return geodataDF
 
 # Returns the map of the world without any country idenifying information
-def getGameWorldData():
+def getGameWorldData(continent = None):
     LOG.info("Getting the game world map")
+    
     geodataDF = openGeoData()
+
+    if continent != None:
+        LOG.info("Getting map of continent: " + continent)
+        geodataDF = geodataDF[geodataDF.continent == continent]
+
     geodataDF = geodataDF.drop(columns = ['iso_a3', 'continent', 'name']) # Drop the name and ISO as they can reveal the country
     return geodataDF
 

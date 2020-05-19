@@ -1,9 +1,10 @@
 // Class that keeps track of the user's score
 class GameScore {
-    constructor(cg, tg) {
+    constructor(cg, tg, c) {
         this.correctGuesses = cg;
         this.totalGuesses = tg;
         this.hasGuessed = false;
+        this.continent = c;
     }
 
     get correctGuesses() {
@@ -37,16 +38,29 @@ class GameScore {
     set hasGuessed(guessed) {
         this._hasGuessed = guessed;
     }
-}
 
-const GS = new GameScore(0, 0);
+    get continent() {
+        return this._continent;
+    }
+    
+    set continent(c) {
+        this._continent = c;
+    }
+}
 
 // Issues a HTTP request to the backend to get a new question.
 // Updates the country prompt
-function getQuestion() {
+function getQuestion(continent) {
     GS.hasGuessed = false;
     var questionButton = document.getElementById("reset-button");
     questionButton.disabled = true;
+
+    var url = "/game/getQuestion";
+    if(GS.continent !== 'World') {
+        url += "?continent=" + String(GS.continent);
+    }
+
+    console.log(url);
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -55,18 +69,21 @@ function getQuestion() {
             document.getElementById("prompt-country").innerHTML = question.Country; 
         }
     }
-    xhttp.open("GET", "/game/getQuestion", true);
+    xhttp.open("GET", url, true);
     xhttp.send();
 }
 
 // Called when a user clicks on a country
 // Issues a HTTP request to check the answer using the prompt country and the id of the country they clicked on
 function checkAnswer(cid, country) {
+    console.log(cid);
+    console.log(country);
     if(!GS.hasGuessed) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function(i) {
             if(this.readyState == 4 && this.status == 200){
                 var answer = JSON.parse(this.response);
+                console.log(answer);
                 var correct = answer.Correct;
                 if(correct == "True"){
                     showPopup("Correct!")
@@ -80,6 +97,8 @@ function checkAnswer(cid, country) {
                     GS.incTotal();
                     var incorrect_country = "country" + String(cid);
                     var correct_country = "country" + String(answer.CorrectID);
+                    console.log(incorrect_country);
+                    console.log(correct_country);
                     document.getElementById(incorrect_country).style['fill'] = "red";
                     document.getElementById(correct_country).style['fill'] = "green";
                 }
@@ -124,6 +143,12 @@ function hidePopup() {
     popup.innerText = "";
 }
 
+function setupGame(continent) {
+    GS = new GameScore(0, 0, continent);
+    drawGameMap();
+    getQuestion();
+}
+
 // When the document loads draw the game map and get a question
-drawGameMap()
-getQuestion();
+var GS;
+setupGame('World'); // Initialize game with no continent specified

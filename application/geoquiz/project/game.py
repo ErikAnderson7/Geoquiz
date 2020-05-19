@@ -22,7 +22,7 @@ def getQuestion():
 
     countryCount = geodataDF.shape[0] # Number of countries in the dataframe
     
-    i = random.randint(0, countryCount)
+    i = random.randrange(0, countryCount)
     countryid = geodataDF.iloc[i]['id']
     country = gd.lookupCountryName(countryid)
     
@@ -64,9 +64,16 @@ def checkAnswer():
 # Returns the GeoJSON data for the entire world
 @game_blueprint.route("/getGameMap")
 def gameMap():
-	LOG.info("Getting the world map")
-	countries_df = gd.getGameWorldData()
-	return jsonify(countries_df.to_json())
+    continent = request.args.get('continent', default = None, type = str)
+
+    if continent != None:
+        LOG.info("Getting game map of " + continent)
+        gamemapDF = gd.getGameWorldData(continent)
+    else:
+        LOG.info("Getting game map of the world")
+        gamemapDF = gd.getGameWorldData()
+    
+    return jsonify(gamemapDF.to_json())
 
 # Returns the GeoJSON data for a specific country
 @game_blueprint.route("/getCountryMap")
