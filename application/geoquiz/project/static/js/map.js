@@ -91,8 +91,6 @@ function drawGameMap(continent) {
     url += "?continent=" + String(GS.continent);
   }
 
-  console.log(url);
-
   d3.json(
     url, function(response) {
       json = JSON.parse(response); 

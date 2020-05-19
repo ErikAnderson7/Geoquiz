@@ -76,14 +76,11 @@ function getQuestion(continent) {
 // Called when a user clicks on a country
 // Issues a HTTP request to check the answer using the prompt country and the id of the country they clicked on
 function checkAnswer(cid, country) {
-    console.log(cid);
-    console.log(country);
     if(!GS.hasGuessed) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function(i) {
             if(this.readyState == 4 && this.status == 200){
                 var answer = JSON.parse(this.response);
-                console.log(answer);
                 var correct = answer.Correct;
                 if(correct == "True"){
                     showPopup("Correct!")
@@ -97,8 +94,6 @@ function checkAnswer(cid, country) {
                     GS.incTotal();
                     var incorrect_country = "country" + String(cid);
                     var correct_country = "country" + String(answer.CorrectID);
-                    console.log(incorrect_country);
-                    console.log(correct_country);
                     document.getElementById(incorrect_country).style['fill'] = "red";
                     document.getElementById(correct_country).style['fill'] = "green";
                 }
