@@ -1,3 +1,9 @@
+$("#quiz-type").change(function() {
+    var quizType = document.getElementById("quiz-type").value;
+    console.log(quizType);
+    setupGame(quizType);
+})
+
 // Class that keeps track of the user's score
 class GameScore {
     constructor(cg, tg, c) {

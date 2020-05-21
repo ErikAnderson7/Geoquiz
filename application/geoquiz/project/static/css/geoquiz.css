@@ -5,27 +5,37 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 }
 
-#top-bar-items {
-    width: 30%;
+.top-bar-items {
+    width: 50%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
 
-#top-bar-items .link-button {
+.top-bar-items .link-button {
     font-family: 'Yanone Kaffeesatz', sans-serif;
     height: 100%;
     font-size: medium;
     text-decoration: none;
     background-color: #384d58;
     color: white;
-    padding: 100% 5%;
+    padding: 2% 5%;
     border-radius: 5px;
     border-color: white;
+}
+
+#quiz-picker-holder {
+    width: 10%;
+    height: 100%;
+    margin-left: -10%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 #bottom-bar {
@@ -71,6 +81,12 @@
 
 #reset-button:disabled {
     visibility: hidden;
+}
+
+#quiz-type {
+    background-color: #384d58;
+    color: white;
+    font-size: medium;
 }
 
 .popup {

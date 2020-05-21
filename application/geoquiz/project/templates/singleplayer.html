@@ -6,7 +6,19 @@
     </head>
     <body>
         <div id="top-bar">
-            <div id="top-bar-items">
+            <div id="quiz-picker-holder">
+                <label class="prompt-label" for="quiz-type">Quiz: </label>
+                <select class="quiz-picker" id="quiz-type" name="Quiz Type">
+                    <option selected value="World">World</option>
+                    <option value="Africa">Africa</option>
+                    <option value="Asia">Asia</option>
+                    <option value="Europe">Europe</option>
+                    <option value="North America">North America</option>
+                    <option value="South America">South America</option>
+                    <option value="Oceania">Oceania</option>
+                </select>
+            </div>
+            <div class="top-bar-items">
                 <a class="link-button" href="http://www.geoquiz.io/">Singleplayer</a>
                 <a class="link-button" href="http://multiplayer.geoquiz.io">Multiplayer</a>
                 <a class="link-button" href="/Statistics">Statistics</a>
