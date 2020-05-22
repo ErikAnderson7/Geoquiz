@@ -1,6 +1,5 @@
 $("#quiz-type").change(function() {
     var quizType = document.getElementById("quiz-type").value;
-    console.log(quizType);
     setupGame(quizType);
 })
 
@@ -65,8 +64,6 @@ function getQuestion(continent) {
     if(GS.continent !== 'World') {
         url += "?continent=" + String(GS.continent);
     }
-
-    console.log(url);
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -145,11 +142,16 @@ function hidePopup() {
 }
 
 function setupGame(continent) {
+    if(GS.hasGuessed) {
+        hidePopup();
+    }
     GS = new GameScore(0, 0, continent);
+    document.getElementById("guess-correct-count").innerHTML = GS.correctGuesses;
+    document.getElementById("guess-total-count").innerHTML = GS.totalGuesses;
     drawGameMap();
     getQuestion();
 }
 
 // When the document loads draw the game map and get a question
-var GS;
+var GS = new GameScore(0, 0, 'World');
 setupGame('World'); // Initialize game with no continent specified
